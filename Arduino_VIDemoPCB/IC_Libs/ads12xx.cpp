@@ -31,11 +31,11 @@ void ads12xx::begin(){
 	delay(500);
 
 	//Message of succesful object creation - Paschalis
-	Serial.println("ADS12xx begin() finished");
+	/*Serial.println("ADS12xx begin() finished");
 	Serial.print("CS:");
 	Serial.print(_CS);
 	Serial.print(", DRDY:");
-	Serial.println(_DRDY);
+	Serial.println(_DRDY);*/
 
 }
 
