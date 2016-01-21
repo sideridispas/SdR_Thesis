@@ -1,7 +1,7 @@
 #include "IC_Libs/ads12xx.h"
 
 long data, m_data;
-float f_data, a=0.9, b=0;
+float f_data, a=1, b=0;
 ads12xx ads1256(7,2); //CS:7, DRDY:2
 
 void reg_init(){
@@ -10,7 +10,8 @@ void reg_init(){
   /***** REGISTER INITIALISATION ******/
   //STATUS register (default: 48)
   reg = ads1256.GetRegisterValue(STATUS);
-  reg = reg & B11110001; //ORDER, ACAL & BUFEN:0
+  reg = reg | B00000010; //BUFEN:1
+  reg = reg & B11110011; //ORDER, ACAL:0
   ads1256.SetRegisterValue(STATUS,reg);
   delayMicroseconds(10);
   
@@ -19,11 +20,11 @@ void reg_init(){
   delayMicroseconds(10);
 
   //ADCON register (default: 32)
-  ads1256.SetRegisterValue(ADCON,B00100111); //PGA:64
+  ads1256.SetRegisterValue(ADCON,B00100110); //PGA:64
   delayMicroseconds(10);
   
   //DRATE register
-  ads1256.SetRegisterValue(DRATE,B00100011); //10SPS - 3000Avgs
+  ads1256.SetRegisterValue(DRATE,B10110000); //10SPS - 3000Avgs B00100011
   delayMicroseconds(10);
   
   //Registers' printing
