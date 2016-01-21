@@ -1,4 +1,4 @@
-#include <ads12xx.h>
+#include "IC_Libs/ads12xx.h"
 
 long data, m_data;
 ads12xx ads1256(7,2); //CS:7, DRDY:2
