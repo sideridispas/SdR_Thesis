@@ -6,11 +6,7 @@ volatile int *IState = &DRDY_state;
 // Waits untill DRDY Pin is falling (see Interrupt setup). 
 // Some commands like WREG, RREG need the DRDY to be low.
 void waitforDRDY() {
-	//Serial.println("Waiting for DRDY interrupt..."); //debug_me
-	//Serial.print("@waitforDRDY | DRDY_state:"); //debug_me
-	//Serial.println(DRDY_state); //debug_me
 	while (DRDY_state) continue;
-	//Serial.println("Interrupt happened!!"); //debug_me
 }
 
 //Interrupt function
@@ -51,10 +47,6 @@ ads12xx::ads12xx(const int CS,const int DRDY) {
 // function to get a 3byte conversion result from the adc
 long ads12xx::GetConversion() {
 	int32_t regData;
-
-	//Serial.print("GetConversion 1 | DRDY_state:"); //debug_me
-	//Serial.println(DRDY_state); //debug_me
-	
 	waitforDRDY(); // Wait until DRDY is LOW
 	SPI.beginTransaction(SPISettings(SPI_SPEED, MSBFIRST, SPI_MODE1)); 
 	digitalWrite(_CS, LOW); //Pull SS Low to Enable Communications with ADS1247
@@ -71,10 +63,6 @@ long ads12xx::GetConversion() {
 	delayMicroseconds(10);
 	digitalWrite(_CS, HIGH);
 	SPI.endTransaction();
-	
-	//Serial.print("GetConversion 2 | DRDY_state:"); //debug_me
-	//Serial.println(DRDY_state); //debug_me
-	
 	noInterrupts();
 	*IState = HIGH;
 	interrupts();
@@ -116,17 +104,11 @@ void ads12xx::SetRegisterValue(uint8_t regAdress, uint8_t regValue) {
 //function to read a register value from the adc
 //argument: adress for the register to read
 unsigned long ads12xx::GetRegisterValue(uint8_t regAdress) {
-	//Serial.println("@GetRegisterValue: wait for interrupt"); //debug_me
-	//Serial.print("\n@GetRegisterValue_1 | DRDY_state:"); //debug_me
-	//Serial.println(DRDY_state); //debug_me
 	waitforDRDY();
-	//Serial.print("\n@GetRegisterValue_2 | DRDY_state:"); //debug_me
-	//Serial.println(DRDY_state); //debug_me
 	SPI.beginTransaction(SPISettings(SPI_SPEED, MSBFIRST, SPI_MODE1)); // initialize SPI with 4Mhz clock, MSB first, SPI Mode0
 	uint8_t bufr;
 	digitalWrite(_CS, LOW);
 	delayMicroseconds(10);
-
 	SPI.transfer(RREG | regAdress); // send 1st command byte, address of the register
 	SPI.transfer(0x00);			// send 2nd command byte, read only one register
 	delayMicroseconds(10);
@@ -134,9 +116,7 @@ unsigned long ads12xx::GetRegisterValue(uint8_t regAdress) {
 	delayMicroseconds(10);
 	digitalWrite(_CS, HIGH);
 	return bufr;
-	SPI.endTransaction();
-	
-	
+	SPI.endTransaction();	
 }
 
 /*
