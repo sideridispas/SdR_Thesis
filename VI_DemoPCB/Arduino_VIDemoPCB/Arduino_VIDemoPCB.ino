@@ -44,7 +44,7 @@ void loop() {
   data = 0;
   
   /************** VOLTAGE 1 MEASUREMENTS **************/
-  ads1256.SetRegisterValue(MUX,B01000101); //AIN4 - AIN5
+  ads1256.SetRegisterValue(MUX,B00100011); //AIN2 - AIN3
   delay(50);
   delayMicroseconds(10);
   ads1256.SendCMD(SYNC);
@@ -57,13 +57,14 @@ void loop() {
   if((data >= 0) && (data <= 8388607)){
     //positive
     f_data = ((float)data/8388607.0)*78.0;
-    //f_data = (f_data-1.0678)/0.8237;
+    f_data = (f_data+0.1386)/1.4742;
   }
   else if((data > 8388607) && (data <= 16777215)){
     //negative
     bitClear(data, 23);
     data = 8388607 - data;
     f_data = ((float)data/8388607.0)*78.0;
+    f_data = (f_data+0.1386)/1.4742;
     f_data = -1*f_data;
   }
 
@@ -78,7 +79,7 @@ void loop() {
   }
   
   /************** VOLTAGE 2 MEASUREMENTS **************/
-  ads1256.SetRegisterValue(MUX,B00100011); //AIN2 - AIN3
+  ads1256.SetRegisterValue(MUX,B01000101); //AIN4 - AIN5
   delay(50);
   delayMicroseconds(10);
   ads1256.SendCMD(SYNC);
@@ -91,13 +92,14 @@ void loop() {
   if((data >= 0) && (data <= 8388607)){
     //positive
     f_data = ((float)data/8388607.0)*78.0;
-    //f_data = (f_data-1.0678)/0.8237;
+    f_data = (f_data+0.1161)/1.4968;
   }
   else if((data > 8388607) && (data <= 16777215)){
     //negative
     bitClear(data, 23);
     data = 8388607 - data;
     f_data = ((float)data/8388607.0)*78.0;
+    f_data = (f_data+0.1161)/1.4968;
     f_data = -1*f_data;
   }
   
@@ -125,13 +127,14 @@ void loop() {
   if((data >= 0) && (data <= 8388607)){
     //positive
     f_data = ((float)data/8388607.0)*78.0;
-    //f_data = (f_data-1.0678)/0.8237;
+    f_data = (f_data-0.321)/4.9331;
   }
   else if((data > 8388607) && (data <= 16777215)){
     //negative
     bitClear(data, 23);
     data = 8388607 - data;
     f_data = ((float)data/8388607.0)*78.0;
+    f_data = (f_data-0.321)/4.9331;
     f_data = -1*f_data;
   }
   if(visual){

@@ -23,16 +23,16 @@ void draw()
   fill(46, 209, 2);
   text("V1:", 65, 100);
   text(dt[0], 170, 100);
-  text("mV", 420, 100);
+  text("V", 420, 100);
   
   text("V2:", 50, 200);
   text(dt[1], 170, 200);
-  text("mV", 420, 200);
+  text("V", 420, 200);
   
   fill(204, 0, 0);
-  text("V3:", 50, 300);
+  text("I:", 100, 300);
   text(dt[2], 170, 300);
-  text("mV", 420, 300);
+  text("A", 420, 300);
 }
   
 void serialEvent (Serial port)
