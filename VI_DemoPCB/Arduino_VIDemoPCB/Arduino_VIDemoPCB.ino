@@ -45,7 +45,7 @@ DeviceAddress Probe05 = { 0x28, 0xD8, 0xC0, 0xAE, 0x07, 0x00, 0x00, 0x9F };
 long data;
 float f_data, V1, V2, I, P;
 
-volatile int RTC_state = HIGH;
+volatile int RTC_state = HIGH; //interrupt flag for RTC's 1Hz pulse
 
 int temp_res = 11; //temperature sensor resolution (9-12 bits)
 
@@ -249,7 +249,9 @@ void loop() {
   unsigned long CurrentTime = millis();
   unsigned long ElapsedTime = CurrentTime - StartTime;
   Serial.print(ElapsedTime);
-  Serial.println("ms");
+  Serial.print("ms:");
+
+  Serial.println(ReadTimeDate());
 }
 
 /*-----( Declare User-written Functions )-----*/
@@ -304,7 +306,7 @@ int RTC_init(){
     //set control register 
     digitalWrite(RTC_CS, LOW);  
     SPI.transfer(0x8E);
-    SPI.transfer(0x60); //60= disable Osciallator and Battery SQ wave @1hz, temp compensation, Alarms disabled
+    SPI.transfer(B01100000); //60= disable Osciallator and Battery SQ wave @1hz, temp compensation, Alarms disabled
     digitalWrite(RTC_CS, HIGH);
     delay(10);
 }
@@ -372,11 +374,11 @@ String ReadTimeDate(){
   temp.concat(TimeDate[5]);
   temp.concat("/") ;
   temp.concat(TimeDate[6]);
-  temp.concat("     ") ;
+  temp.concat("  ") ;
   temp.concat(TimeDate[2]);
-  temp.concat(":") ;
+  temp.concat(".") ;
   temp.concat(TimeDate[1]);
-  temp.concat(":") ;
+  temp.concat(".") ;
   temp.concat(TimeDate[0]);
   return(temp);
 }

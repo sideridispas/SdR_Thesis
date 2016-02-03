@@ -1,7 +1,7 @@
 import processing.serial.*;
 Serial port;
 String dataRaw = "";
-String[] dt = {"", "", "", "", "", "","", "", "", ""};
+String[] dt = {"", "", "", "", "", "","", "", "", "", ""};
 PFont font;
 
 void setup()
@@ -59,6 +59,9 @@ void draw()
   textSize(30);
   text("Elapsed time:", 500, 420);
   text(dt[9], 650, 420);
+  
+  text("Timestamp:", 50, 420);
+  text(dt[10], 180, 420);
 
 }
   
