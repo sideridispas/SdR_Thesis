@@ -1,14 +1,15 @@
-/**************************************************
-  VI_PCB with DS18B20 temperature sensors logging
-  Paschalis Sideridis - February 2016 
-
-  Conections:
-    VI_PCB: SCLK |  DIN | DOUT |  DRDY |  CS
-            SCK     MOSI  MISO    INT     I/O
-            13      11    12      2       7
-
-    TEMP_1WIRE_BUS: PIN 3
-**************************************************/
+/********************************************************
+*    VI_PCB with DS18B20 temperature sensors logging    *
+*          Paschalis Sideridis - February 2016          *
+*                                                       *
+*  Conections:                                          *
+*    VI_PCB: SCLK |  DIN | DOUT |  DRDY |  CS           *
+*            SCK     MOSI  MISO    INT     I/O          *
+*            13      11    12      2       7            *
+*                                                       *
+*    TEMP_1WIRE_BUS: PIN 3                              *
+*                                                       *
+********************************************************/
 
 /*-----( Import needed libraries )-----*/
 #include "IC_Libs/ads12xx.h" //ADC ADS1256 libraries
@@ -21,6 +22,8 @@
 /*-----( Declare objects )-----*/
 // Setup a oneWire instance to communicate with any OneWire devices
 OneWire oneWire(ONE_WIRE_BUS_PIN);
+// Setup a ads12xx object to communicate with the ADS1256 ADC
+ads12xx ads1256(7,2); //CS:7, DRDY:2
 
 // Pass our oneWire reference to Dallas Temperature.
 DallasTemperature sensors(&oneWire);
@@ -34,7 +37,7 @@ DeviceAddress Probe05 = { 0x28, 0xD8, 0xC0, 0xAE, 0x07, 0x00, 0x00, 0x9F };
 
 long data;
 float f_data, V1, V2, I, P;
-ads12xx ads1256(7,2); //CS:7, DRDY:2
+
 int temp_res = 11; //temperature sensor resolution (9-12 bits)
 
 int visual = 1; //processing app:1 - arduino serial monitor:0
@@ -76,7 +79,8 @@ void loop() {
   if((data >= 0) && (data <= 8388607)){
     //positive
     f_data = ((float)data/8388607.0)*78.0;
-    V1 = (f_data+0.1386)/1.4742;
+    f_data = (f_data+0.1386)/1.4742;
+    V1 = (f_data+0.0105)/0.9998;
   }
   else if((data > 8388607) && (data <= 16777215)){
     //negative
@@ -84,6 +88,7 @@ void loop() {
     data = 8388607 - data;
     f_data = ((float)data/8388607.0)*78.0;
     f_data = (f_data+0.1386)/1.4742;
+    f_data = (f_data+0.0105)/0.9998;
     V1 = -1*f_data;
   }
 
@@ -166,7 +171,7 @@ void loop() {
     Serial.print(" | ");
   }
 
-  /************** TEMPERATURE CALCULATIONS **************/
+  /************** POWER CALCULATIONS **************/
   P = V1 * I;
   if(visual){
     Serial.print(P,4);
