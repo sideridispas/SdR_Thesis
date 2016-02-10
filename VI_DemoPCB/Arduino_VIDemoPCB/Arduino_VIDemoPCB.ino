@@ -18,6 +18,7 @@
 #include "IC_Libs/ads12xx.h" //ADC ADS1256 libraries
 #include "IC_Libs/OneWire/OneWire.h" //Temperature sensor DS18B20 libraries
 #include "IC_Libs/dallas-temperature-control/DallasTemperature.h"
+#include <Wire.h>
 
 /*-----( Declare Constants and Pin Numbers )-----*/
 #define ONE_WIRE_BUS_PIN 4
@@ -43,9 +44,13 @@ DeviceAddress Probe04 = { 0x28, 0x39, 0xAF, 0xAF, 0x07, 0x00, 0x00, 0x70 };
 DeviceAddress Probe05 = { 0x28, 0xD8, 0xC0, 0xAE, 0x07, 0x00, 0x00, 0x9F };
 
 long data;
-float f_data, V1, V2, I, P;
+float f_data, V1, V2, I, P, tempC1, tempC2, tempC3, tempC4, tempC5;
+
+String dataString1, dataString2;
 
 volatile int RTC_state = HIGH; //interrupt flag for RTC's 1Hz pulse
+
+volatile int data_ready = LOW; //flag for i2c communication (data ready to send to master)
 
 int temp_res = 11; //temperature sensor resolution (9-12 bits)
 
@@ -57,8 +62,8 @@ void setup() {
   ads1256.begin();
   reg_init();  //ADC's register initialisation
   sensors.begin(); //Initialize the Temperature measurement library
-  ads1256.SendCMD(SELFCAL); //self-calibration command
-  delay(100); //wait the calibration
+  //ads1256.SendCMD(SELFCAL); //self-calibration command
+  //delay(100); //wait the calibration
 
   // set the resolution of temp sensors
   sensors.setResolution(Probe01, temp_res);
@@ -73,10 +78,16 @@ void setup() {
 
   //interrupt for waiting the 1Hz pulse of RTC
   attachInterrupt(digitalPinToInterrupt(RTC_SQW), RTC_Interrupt, FALLING);
+
+  Wire.begin(5);
+  Wire.onRequest(requestEvent);
 }
 
 void loop() {
-  
+
+  dataString1 = "";
+  dataString2 = "";
+  data_ready = LOW;
   /************** VOLTAGE 1 MEASUREMENTS **************/
 
   //Get starting time
@@ -203,19 +214,24 @@ void loop() {
   sensors.requestTemperatures();  
 
   if(visual){
-    printTemperature(Probe01);
+    tempC1 = printTemperature(Probe01);
+    Serial.print(tempC1);
     Serial.print(" C:");
 
-    printTemperature(Probe02);
+    tempC2 = printTemperature(Probe02);
+    Serial.print(tempC2);
     Serial.print(" C:");
 
-    printTemperature(Probe03);
+    tempC3 = printTemperature(Probe03);
+    Serial.print(tempC3);
     Serial.print(" C:");
 
-    printTemperature(Probe04);
+    tempC4 = printTemperature(Probe04);
+    Serial.print(tempC4);
     Serial.print(" C:");
 
-    printTemperature(Probe05);
+    tempC5 = printTemperature(Probe05);
+    Serial.print(tempC5);
     Serial.print(" C:");
   }
   else{
@@ -240,6 +256,29 @@ void loop() {
     Serial.println();
   }
 
+
+  //--------prepare the dataString---------
+  dataString1.concat(V1);
+  dataString1.concat(",");
+  dataString1.concat(V2);
+  dataString1.concat(",");
+  dataString1.concat(I);
+  dataString1.concat(",");
+  dataString1.concat(tempC1);
+  dataString1.concat(",");
+  dataString1.concat(tempC2);
+  dataString1.concat(",");
+  
+  dataString2.concat(tempC3);
+  dataString2.concat(",");
+  dataString2.concat(tempC4);
+  dataString2.concat(",");
+  dataString2.concat(tempC5);
+
+  //now is time for data sending
+  data_ready = HIGH;
+  
+  
   waitforRTC();
   noInterrupts();
   RTC_state = HIGH;
@@ -252,6 +291,9 @@ void loop() {
   Serial.print("ms:");
 
   Serial.println(ReadTimeDate());
+
+  
+
 }
 
 /*-----( Declare User-written Functions )-----*/
@@ -279,19 +321,18 @@ void reg_init(){
   }*/
 }
 
-void printTemperature(DeviceAddress deviceAddress)
+float printTemperature(DeviceAddress deviceAddress)
 {
 
 float tempC = sensors.getTempC(deviceAddress);
 
    if (tempC == -127.00) 
    {
-   Serial.print("ERR");
+   return(999.99);
    } 
    else
    {
-   //Serial.print("C: ");
-   Serial.print(tempC);
+   return(tempC);
    //Serial.print(" F: ");
    //Serial.print(DallasTemperature::toFahrenheit(tempC));
    }
@@ -389,4 +430,23 @@ void RTC_Interrupt(){
 
 void waitforRTC() {
   while (RTC_state) continue;
+}
+
+void requestEvent()
+{
+  if(data_ready){
+    int str_len = dataString1.length() + 1; 
+    char char_array1[str_len];
+    dataString1.toCharArray(char_array1, str_len);
+
+    str_len = dataString2.length() + 1; 
+    char char_array2[str_len];
+    dataString2.toCharArray(char_array2, str_len);
+    
+    Wire.write(char_array1);
+    
+  }else{
+    Wire.write("N");
+  }
+  
 }
