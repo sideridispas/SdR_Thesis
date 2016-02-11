@@ -46,11 +46,13 @@ DeviceAddress Probe05 = { 0x28, 0xD8, 0xC0, 0xAE, 0x07, 0x00, 0x00, 0x9F };
 long data;
 float f_data, V1, V2, I, P, tempC1, tempC2, tempC3, tempC4, tempC5;
 
-String dataString1, dataString2;
+String dataString1, dataString2, dataString3;
 
 volatile int RTC_state = HIGH; //interrupt flag for RTC's 1Hz pulse
 
 volatile int data_ready = LOW; //flag for i2c communication (data ready to send to master)
+
+byte LastMasterCommand = 0; //id of data packet to transmit to master
 
 int temp_res = 11; //temperature sensor resolution (9-12 bits)
 
@@ -80,13 +82,15 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(RTC_SQW), RTC_Interrupt, FALLING);
 
   Wire.begin(5);
-  Wire.onRequest(requestEvent);
+  Wire.onReceive(receiveCommand);
+  Wire.onRequest(slavesRespond);
 }
 
 void loop() {
 
   dataString1 = "";
   dataString2 = "";
+  dataString3 = "";
   data_ready = LOW;
   /************** VOLTAGE 1 MEASUREMENTS **************/
 
@@ -257,24 +261,28 @@ void loop() {
   }
 
 
-  //--------prepare the dataString---------
-  dataString1.concat(V1);
+  /*--------( prepare the dataStrings )---------*/
+  dataString1 = dataString1 + String(V1,4);
   dataString1.concat(",");
-  dataString1.concat(V2);
+  dataString1 = dataString1 + String(V2,4);
   dataString1.concat(",");
-  dataString1.concat(I);
-  dataString1.concat(",");
-  dataString1.concat(tempC1);
-  dataString1.concat(",");
-  dataString1.concat(tempC2);
+  dataString1 = dataString1 + String(I,4);
   dataString1.concat(",");
   
-  dataString2.concat(tempC3);
+  dataString2 = dataString2 + String(tempC1,2);
   dataString2.concat(",");
-  dataString2.concat(tempC4);
+  dataString2 = dataString2 + String(tempC2,2);
   dataString2.concat(",");
-  dataString2.concat(tempC5);
+  dataString2 = dataString2 + String(tempC3,2);
+  dataString2.concat(",");
+  dataString2 = dataString2 + String(tempC4,2);
+  dataString2.concat(",");
+  dataString2 = dataString2 + String(tempC5,2);
 
+  dataString3.concat(ReadTimeDate());
+  Serial.println(ReadTimeDate());
+
+  
   //now is time for data sending
   data_ready = HIGH;
   
@@ -290,9 +298,6 @@ void loop() {
   Serial.print(ElapsedTime);
   Serial.print("ms:");
 
-  Serial.println(ReadTimeDate());
-
-  
 
 }
 
@@ -328,7 +333,7 @@ float tempC = sensors.getTempC(deviceAddress);
 
    if (tempC == -127.00) 
    {
-   return(999.99);
+   return(99.99);
    } 
    else
    {
@@ -415,11 +420,11 @@ String ReadTimeDate(){
   temp.concat(TimeDate[5]);
   temp.concat("/") ;
   temp.concat(TimeDate[6]);
-  temp.concat("  ") ;
+  temp.concat(" ") ;
   temp.concat(TimeDate[2]);
-  temp.concat(".") ;
+  temp.concat(":") ;
   temp.concat(TimeDate[1]);
-  temp.concat(".") ;
+  temp.concat(":") ;
   temp.concat(TimeDate[0]);
   return(temp);
 }
@@ -432,8 +437,11 @@ void waitforRTC() {
   while (RTC_state) continue;
 }
 
-void requestEvent()
-{
+void receiveCommand(int howMany){
+  LastMasterCommand = Wire.read(); // 1 byte (maximum 256 commands)
+}
+
+void slavesRespond(){
   if(data_ready){
     int str_len = dataString1.length() + 1; 
     char char_array1[str_len];
@@ -442,11 +450,30 @@ void requestEvent()
     str_len = dataString2.length() + 1; 
     char char_array2[str_len];
     dataString2.toCharArray(char_array2, str_len);
+
+    str_len = dataString3.length() + 1; 
+    char char_array3[str_len];
+    dataString3.toCharArray(char_array3, str_len);
     
-    Wire.write(char_array1);
-    
-  }else{
-    Wire.write("N");
-  }
+    switch(LastMasterCommand){
+      case 0:   // No new command was received
+        Wire.write("S"); //Stay still
+      break;
+      
+      case 1:   // Return 1st packet
+        Wire.write(char_array1);
+      break;
   
+      case 2:   // Return 2nd packet
+        Wire.write(char_array2);
+      break;
+
+      case 3:   // Return 2nd packet
+        Wire.write(char_array3);
+      break;
+    }
+    LastMasterCommand = 0;    
+  }else{
+    Wire.write("N"); //Data Not ready
+  }
 }
