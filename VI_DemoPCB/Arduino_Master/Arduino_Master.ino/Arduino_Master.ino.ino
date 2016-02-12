@@ -26,13 +26,12 @@ void loop()
   data_ready = HIGH;
   interrupts();
   
-  Serial.println("--------------------------");
   while(!printPacket(1)){}
   //delay(10);
   while(!printPacket(3)){}
   //delay(10);
   while(!printPacket(2)){}
-
+  Serial.println();
   
   delay(200);
 }
@@ -51,7 +50,7 @@ int printPacket(int n){
   if(n == 1){
     Wire.requestFrom(5,30);
   }else if(n == 2){
-    Wire.requestFrom(5,29);
+    Wire.requestFrom(5,30);
   }else if(n == 3){
     Wire.requestFrom(5,29);
   }
@@ -69,9 +68,9 @@ int printPacket(int n){
     receivedValue =  receivedValue + c;
   }
   
-  Serial.print(n);
-  Serial.println(" packet received:");
-  Serial.println(receivedValue);
+  //Serial.print(n);
+  //Serial.println(" packet received:");
+  Serial.print(receivedValue);
   return 1;
 }
 
