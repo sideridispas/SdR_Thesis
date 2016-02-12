@@ -11,6 +11,7 @@ void setup()
   port.bufferUntil('\n'); 
   font = loadFont("AgencyFB-Bold-200.vlw");
   textFont(font, 60);
+  noLoop();
 }
 
 void draw()
@@ -77,5 +78,14 @@ void serialEvent (Serial port)
 {
   dataRaw = port.readStringUntil('\n');
   dataRaw = dataRaw.substring(0, dataRaw.length()-1);
-  dt = split(dataRaw, ',');
+  dt = splitTokens(dataRaw, ",");
+  
+  println("before:" + dt.length);
+  
+  if(dt.length == 12){
+    redraw();
+  }else{
+   println("Error, garbage data"); 
+  }
+  
 }

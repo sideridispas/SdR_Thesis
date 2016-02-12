@@ -34,7 +34,7 @@ void loop()
   while(!printPacket(2)){}
   Serial.println();
   
-  delay(200);
+  delay(500);
 }
 
 int printPacket(int n){
