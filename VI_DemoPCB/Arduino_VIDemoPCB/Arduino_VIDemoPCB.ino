@@ -26,6 +26,7 @@
 #define ADC_DRDY 2
 #define RTC_CS 8
 #define RTC_SQW 3
+#define DATA_READY_PIN 6
 
 /*-----( Declare objects )-----*/
 // Setup a oneWire instance to communicate with any OneWire devices
@@ -84,6 +85,10 @@ void setup() {
   Wire.begin(5);
   Wire.onReceive(receiveCommand);
   Wire.onRequest(slavesRespond);
+
+  pinMode(DATA_READY_PIN,OUTPUT); // data ready pin that interrupts on master side
+  digitalWrite(DATA_READY_PIN, HIGH);
+  
 }
 
 void loop() {
@@ -286,8 +291,9 @@ void loop() {
 
   
   //now is time for data sending
-  data_ready = HIGH;
-  
+  digitalWrite(DATA_READY_PIN, LOW);
+  delay(10);
+  digitalWrite(DATA_READY_PIN, HIGH);
   
   waitforRTC();
   noInterrupts();
@@ -444,7 +450,6 @@ void receiveCommand(int howMany){
 }
 
 void slavesRespond(){
-  if(data_ready){
     int str_len = dataString1.length() + 1; 
     char char_array1[str_len];
     dataString1.toCharArray(char_array1, str_len);
@@ -474,8 +479,5 @@ void slavesRespond(){
         Wire.write(char_array3);
       break;
     }
-    LastMasterCommand = 0;    
-  }else{
-    Wire.write("N"); //Data Not ready
-  }
+    LastMasterCommand = 0;
 }

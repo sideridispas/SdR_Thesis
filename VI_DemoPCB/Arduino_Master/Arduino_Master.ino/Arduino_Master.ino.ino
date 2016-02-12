@@ -1,14 +1,31 @@
 //i2c Master(UNO)
 #include <Wire.h>
 
+#define DATA_INT 3 //interrupt pin for slave data
+
+volatile int data_ready = HIGH; //interrupt flag for data ready from slave
 void setup()
 {
   Wire.begin();
   Serial.begin(9600);
+
+  //set up interrupt for data ready waiting from slave
+  attachInterrupt(digitalPinToInterrupt(DATA_INT), Data_Interrupt, FALLING);
+
+  waitforDATA(); //initial delay for stabilizing the communication
+  noInterrupts();
+  data_ready = HIGH;
+  interrupts();
+  delay(100);
 }
 
 void loop()
 {
+  waitforDATA();
+  noInterrupts();
+  data_ready = HIGH;
+  interrupts();
+  
   Serial.println("--------------------------");
   while(!printPacket(1)){}
   //delay(10);
@@ -58,3 +75,10 @@ int printPacket(int n){
   return 1;
 }
 
+void Data_Interrupt(){
+  data_ready = LOW;  
+}
+
+void waitforDATA() {
+  while (data_ready) continue;
+}
