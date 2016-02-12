@@ -66,7 +66,7 @@ void setup() {
   reg_init();  //ADC's register initialisation
   sensors.begin(); //Initialize the Temperature measurement library
   //ads1256.SendCMD(SELFCAL); //self-calibration command
-  //delay(100); //wait the calibration
+  
 
   // set the resolution of temp sensors
   sensors.setResolution(Probe01, temp_res);
@@ -88,6 +88,7 @@ void setup() {
 
   pinMode(DATA_READY_PIN,OUTPUT); // data ready pin that interrupts on master side
   digitalWrite(DATA_READY_PIN, HIGH);
+  delay(100); //wait the system stability
   
 }
 

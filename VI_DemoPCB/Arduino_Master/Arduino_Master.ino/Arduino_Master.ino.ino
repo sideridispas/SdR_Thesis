@@ -12,11 +12,12 @@ void setup()
   //set up interrupt for data ready waiting from slave
   attachInterrupt(digitalPinToInterrupt(DATA_INT), Data_Interrupt, FALLING);
 
+  delay(1000);
   waitforDATA(); //initial delay for stabilizing the communication
   noInterrupts();
   data_ready = HIGH;
   interrupts();
-  delay(100);
+  delay(1000);
 }
 
 void loop()
