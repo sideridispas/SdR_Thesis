@@ -10,14 +10,14 @@ void setup()
 void loop()
 {
   Serial.println("--------------------------");
-  while(!printPacket(3)){}
-  delay(20);
   while(!printPacket(1)){}
-  delay(20);
+  //delay(10);
+  while(!printPacket(3)){}
+  //delay(10);
   while(!printPacket(2)){}
 
   
-  delay(100);
+  delay(200);
 }
 
 int printPacket(int n){

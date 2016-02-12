@@ -279,6 +279,8 @@ void loop() {
   dataString2.concat(",");
   dataString2 = dataString2 + String(tempC5,2);
 
+  dataString3 = dataString3 + String(P,4);
+  dataString3.concat(",");
   dataString3.concat(ReadTimeDate());
   Serial.println(ReadTimeDate());
 
