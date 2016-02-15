@@ -115,9 +115,12 @@ void loop() {
   
   if((data >= 0) && (data <= 8388607)){
     //positive
-    f_data = ((float)data/8388607.0)*78.0;
+    /*f_data = ((float)data/8388607.0)*78.0;
     f_data = (f_data+0.1386)/1.4742;
-    V1 = (f_data+0.0105)/0.9998;
+    V1 = (f_data+0.0105)/0.9998;*/
+    V1 = ((float)data/8388607.0)*78.0;
+    V1 = (V1+0.0525)/1.4824;
+    V1 = (V1-0.0011)/1.0001;
   }
   else if((data > 8388607) && (data <= 16777215)){
     //negative
@@ -152,8 +155,11 @@ void loop() {
   
   if((data >= 0) && (data <= 8388607)){
     //positive
-    f_data = ((float)data/8388607.0)*78.0;
-    V2 = (f_data+0.1161)/1.4968;
+    /*f_data = ((float)data/8388607.0)*78.0;
+    V2 = (f_data+0.1161)/1.4968;*/
+    V2 = ((float)data/8388607.0)*78.0;
+    V2 = (V2 + 0.1683)/1.5042;
+    V2 = (V2 -0.09)/0.9922;
   }
   else if((data > 8388607) && (data <= 16777215)){
     //negative
@@ -187,8 +193,11 @@ void loop() {
   
   if((data >= 0) && (data <= 8388607)){
     //positive
-    f_data = ((float)data/8388607.0)*78.0;
-    I = (f_data-0.321)/4.9331;
+    /*f_data = ((float)data/8388607.0)*78.0;
+    I = (f_data-0.321)/4.9331;*/
+    I = ((float)data/8388607.0)*78.0;
+    I = (I-0.1816)/4.9424;
+    I = (I+0.0058)/1.0016;
   }
   else if((data > 8388607) && (data <= 16777215)){
     //negative
