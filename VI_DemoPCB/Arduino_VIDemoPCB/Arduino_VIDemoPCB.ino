@@ -65,7 +65,9 @@ void setup() {
   ads1256.begin();
   reg_init();  //ADC's register initialisation
   sensors.begin(); //Initialize the Temperature measurement library
-  //ads1256.SendCMD(SELFCAL); //self-calibration command
+
+  delay(200); //wait for voltage reference to be stable
+  ads1256.SendCMD(SELFCAL); //self-calibration command
   
 
   // set the resolution of temp sensors
@@ -120,7 +122,7 @@ void loop() {
     V1 = (f_data+0.0105)/0.9998;*/
     V1 = ((float)data/8388607.0)*78.0;
     V1 = (V1+0.0525)/1.4824;
-    V1 = (V1-0.0011)/1.0001;
+    V1 = (V1+0.039)/0.999;
   }
   else if((data > 8388607) && (data <= 16777215)){
     //negative
@@ -159,7 +161,7 @@ void loop() {
     V2 = (f_data+0.1161)/1.4968;*/
     V2 = ((float)data/8388607.0)*78.0;
     V2 = (V2 + 0.1683)/1.5042;
-    V2 = (V2 -0.09)/0.9922;
+    V2 = (V2 -0.0473)/0.9934;
   }
   else if((data > 8388607) && (data <= 16777215)){
     //negative
@@ -197,7 +199,7 @@ void loop() {
     I = (f_data-0.321)/4.9331;*/
     I = ((float)data/8388607.0)*78.0;
     I = (I-0.1816)/4.9424;
-    I = (I+0.0058)/1.0016;
+    I = (I-0.0205)/0.9994;
   }
   else if((data > 8388607) && (data <= 16777215)){
     //negative
