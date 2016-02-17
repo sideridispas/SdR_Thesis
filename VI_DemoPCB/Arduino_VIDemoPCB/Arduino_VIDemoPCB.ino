@@ -97,108 +97,29 @@ void loop() {
 
   unsigned long StartTime = millis();  //Get starting time
   
-  /************** VOLTAGE 1 MEASUREMENTS **************/
-
+  // VOLTAGE 1 MEASUREMENTS
   V1 = getCalibratedData(B00100011, 1.4824, -0.0525, 0.999, -0.039);
-
-  if(visual){
-    Serial.print(V1,4);
-    Serial.print(":");
-  }
-  else{
-    Serial.print("V1:");
-    Serial.print(V1,4);
-    Serial.print(" | ");
-  }
   
-  /************** VOLTAGE 2 MEASUREMENTS **************/
-
+  // VOLTAGE 2 MEASUREMENTS
   V2 = getCalibratedData(B01000101, 1.5042, -0.1683, 0.9934, -0.0473);
-  
-   if(visual){
-      Serial.print(V2,4);
-      Serial.print(":");
-    }
-    else{
-      Serial.print("V2:");
-      Serial.print(V2,4);
-      Serial.print(" | ");
-    }
 
-  /************** CURRENT MEASUREMENTS **************/
-
+  // CURRENT MEASUREMENTS
   I = getCalibratedData(B00010000, 4.9424, 0.1816, 0.9994, 0.0205);
  
-  if(visual){
-    Serial.print(I,4);
-    Serial.print(":");
-  }
-  else{
-    Serial.print("I:");
-    Serial.print(I,4);
-    Serial.print(" | ");
-  }
-
-  /************** POWER CALCULATIONS **************/
+  // POWER CALCULATIONS
   P = V1 * I;
-  if(visual){
-    Serial.print(P,4);
-    Serial.print(":");
-  }
-  else{
-    Serial.print("P:");
-    Serial.println(P,4);
-  }
   
-  /************** TEMPERATURE MEASUREMENTS **************/
-  // Command all devices on bus to read temperature  
-  sensors.requestTemperatures();  
+  // TEMPERATURE MEASUREMENTS  
+  sensors.requestTemperatures(); //Command all devices on bus to read temperature  
 
-  if(visual){
-    tempC1 = printTemperature(Probe01);
-    Serial.print(tempC1);
-    Serial.print(" C:");
+  tempC1 = printTemperature(Probe01);
+  tempC2 = printTemperature(Probe02);
+  tempC3 = printTemperature(Probe03);
+  tempC4 = printTemperature(Probe04);
+  tempC5 = printTemperature(Probe05);
 
-    tempC2 = printTemperature(Probe02);
-    Serial.print(tempC2);
-    Serial.print(" C:");
-
-    tempC3 = printTemperature(Probe03);
-    Serial.print(tempC3);
-    Serial.print(" C:");
-
-    tempC4 = printTemperature(Probe04);
-    Serial.print(tempC4);
-    Serial.print(" C:");
-
-    tempC5 = printTemperature(Probe05);
-    Serial.print(tempC5);
-    Serial.print(" C:");
-  }
-  else{
-    Serial.print("Probe 01 temperature is:   ");
-    printTemperature(Probe01);
-    Serial.println();
   
-    Serial.print("Probe 02 temperature is:   ");
-    printTemperature(Probe02);
-    Serial.println();
-   
-    Serial.print("Probe 03 temperature is:   ");
-    printTemperature(Probe03);
-    Serial.println();
-     
-    Serial.print("Probe 04 temperature is:   ");
-    printTemperature(Probe04);
-    Serial.println();
-    
-    Serial.print("Probe 05 temperature is:   ");
-    printTemperature(Probe05);
-    Serial.println();
-  }
-
-
-  /*--------( prepare the dataStrings )---------*/
+  // DATASTRING FILLING
   dataString1 = dataString1 + String(V1,4);
   dataString1.concat(",");
   dataString1 = dataString1 + String(V2,4);
@@ -222,26 +143,29 @@ void loop() {
   dataString3.concat(",");
   dataString3.concat(ReadTimeDate());
   dataString3.concat(",");
-  Serial.println(ReadTimeDate());
+
+  Serial.print(dataString1);
+  Serial.print(dataString2);
+  Serial.println(dataString3);
 
   
-  //now is time for data sending
-  digitalWrite(DATA_READY_PIN, LOW);
+  //Datastrings ready to be transfered to master
+  digitalWrite(DATA_READY_PIN, LOW); //falling edge trigger interrupt
   delay(10);
-  digitalWrite(DATA_READY_PIN, HIGH);
-  
-  waitforRTC();
+  digitalWrite(DATA_READY_PIN, HIGH); //restore pin to high
+
+  //FREE TIME: here we are just waiting for the second to be completed
+
+  waitforRTC(); //Waiting for the 1Hz pulse to arrive
   noInterrupts();
-  RTC_state = HIGH;
+  RTC_state = HIGH; //restoring the volatile interrupt flag
   interrupts();
 
   //Get end time
   unsigned long CurrentTime = millis();
   unsigned long ElapsedTime = CurrentTime - StartTime;
   Serial.print(ElapsedTime);
-  Serial.print("ms:");
-
-
+  Serial.println(" ms");
 }
 
 /*-----( Declare User-written Functions )-----*/
@@ -418,6 +342,7 @@ void slavesRespond(){
 }
 
 float getCalibratedData(int mux_value, float a1, float b1, float a2, float b2){
+  //returns the twice calibrated data of the conversion based on the trend line of raw data compared to DMM (y = ax + b)
   
   long data; //variable for storing the result (long) of the ADC convertions
   float Cal_data; //calibrated data variable to be returned in the end
