@@ -30,13 +30,13 @@
 #define DATA_READY_PIN 6 //Pin for outputting the flag "Data ready" (all datastrings) to be readen by the master arduino
 
 /*-----( Declare objects )-----*/
-// Setup a oneWire instance to communicate with any OneWire devices
-OneWire oneWire(ONE_WIRE_BUS_PIN);
 // Setup a ads12xx object to communicate with the ADS1256 ADC
 ads12xx ads1256(ADC_CS,ADC_DRDY);
+// Setup a oneWire instance to communicate with any OneWire devices
+OneWire oneWire1(ONE_WIRE_BUS_PIN);
 // Pass our oneWire reference to Dallas Temperature.
-DallasTemperature temp_sensors(&oneWire);
-// Setup a ds3234 instance
+DallasTemperature temp_sensors(&oneWire1);
+// Setup a ds3234 object
 ds3234 rtc(RTC_CS);
 
 /*-----( Declare Variables )-----*/
@@ -46,22 +46,22 @@ DeviceAddress Probe02 = { 0x28, 0xA8, 0xF3, 0xAF, 0x07, 0x00, 0x00, 0x42 };
 DeviceAddress Probe03 = { 0x28, 0x85, 0xC0, 0xAF, 0x07, 0x00, 0x00, 0x74 };
 DeviceAddress Probe04 = { 0x28, 0x39, 0xAF, 0xAF, 0x07, 0x00, 0x00, 0x70 };
 DeviceAddress Probe05 = { 0x28, 0xD8, 0xC0, 0xAE, 0x07, 0x00, 0x00, 0x9F };
+DeviceAddress Probe06 = { 0x28, 0x60, 0x06, 0x81, 0x07, 0x00, 0x00, 0x6D };
+DeviceAddress Probe07 = { 0x28, 0x50, 0x2C, 0x81, 0x07, 0x00, 0x00, 0xC5 };
 
-float f_data, V1, V2, I, P, tempC1, tempC2, tempC3, tempC4, tempC5; //f_data: float version of ADC data, rest: readen data after conversion and calculations
-String dataString1, dataString2, dataString3; //Data strings used for the data transfer to master arduino through I2C bus
+float f_data, V1, V2, I, P, tempC1, tempC2, tempC3, tempC4, tempC5, tempC6, tempC7; //f_data: float version of ADC data, rest: data after conversion and calculations
+String dataString1, dataString2, dataString3, dataString4; //Data strings used for the data transfer to master arduino through I2C bus
 volatile int RTC_state = HIGH; //interrupt flag for RTC's 1Hz pulse
 volatile int data_ready = LOW; //flag for i2c communication (data ready to send to master)
 byte LastMasterCommand = 0; //id of data packet to transmit to master
 int temp_res = 11; //temperature sensor' output data resolution (9-12 bits)
-int visual = 1; //processing app:1 - arduino serial monitor:0
-
 
 void setup() {
   Serial.begin(9600); //start serial port to show results
   ads1256.begin(); //begin init for ADC chip
   ads1256.reg_init();  //ADC's register initialisation
   temp_sensors.begin(); //initialize the Temperature measurement library
-
+  
   delay(200); //wait for voltage reference to be stable
   ads1256.SendCMD(SELFCAL); //ADC self-calibration command
   
@@ -71,6 +71,8 @@ void setup() {
   temp_sensors.setResolution(Probe03, temp_res);
   temp_sensors.setResolution(Probe04, temp_res);
   temp_sensors.setResolution(Probe05, temp_res);
+  temp_sensors.setResolution(Probe06, temp_res);
+  temp_sensors.setResolution(Probe07, temp_res);
 
   rtc.RTC_init();//initialize of RTC chip
   //Seting the timestamp [day(1-31), month(1-12), year(0-99), hour(0-23), minute(0-59), second(0-59)]
@@ -90,16 +92,17 @@ void setup() {
 }
 
 void loop() {
+
+  unsigned long StartTime = millis();  //Get starting time
   
   //clearing the datastrings before storing the new data
   dataString1 = "";
   dataString2 = "";
   dataString3 = "";
+  dataString4 = "";
   
   data_ready = LOW; //clear the "data ready" flag. It will be set when all datastrings are updated with the new data
 
-  unsigned long StartTime = millis();  //Get starting time
-  
   // VOLTAGE 1 MEASUREMENTS
   V1 = ads1256.getCalibratedData(B00100011, 1.4824, -0.0525, 0.999, -0.039);
   
@@ -113,15 +116,16 @@ void loop() {
   P = V1 * I;
   
   // TEMPERATURE MEASUREMENTS  
-  temp_sensors.requestTemperatures(); //Command all devices on bus to read temperature  
+  temp_sensors.requestTemperatures(); //Command all devices on bus to read temperature
 
   tempC1 = temp_sensors.printTemperature(Probe01);
   tempC2 = temp_sensors.printTemperature(Probe02);
   tempC3 = temp_sensors.printTemperature(Probe03);
   tempC4 = temp_sensors.printTemperature(Probe04);
   tempC5 = temp_sensors.printTemperature(Probe05);
+  tempC6 = temp_sensors.printTemperature(Probe06);
+  tempC7 = temp_sensors.printTemperature(Probe07);
 
-  
   // DATASTRING FILLING
   dataString1 = dataString1 + String(V1,4);
   dataString1.concat(",");
@@ -147,11 +151,17 @@ void loop() {
   dataString3.concat(rtc.ReadTimeDate());
   dataString3.concat(",");
 
-  Serial.print(dataString1);
-  Serial.print(dataString2);
-  Serial.println(dataString3);
+  dataString4.concat(",");
+  dataString4 = dataString4 + String(tempC6,2);
+  dataString4.concat(",");
+  dataString4 = dataString4 + String(tempC7,2);
+  dataString4.concat(",");
 
-  
+  Serial.print(dataString1);
+  Serial.print(dataString3);
+  Serial.print(dataString2);
+  Serial.println(dataString4);
+
   //Datastrings ready to be transfered to master
   digitalWrite(DATA_READY_PIN, LOW); //falling edge trigger interrupt
   delay(10);
@@ -159,10 +169,10 @@ void loop() {
 
   //FREE TIME: here we are just waiting for the second to be completed
 
-  waitforRTC(); //Waiting for the 1Hz pulse to arrive
+  /*waitforRTC(); //Waiting for the 1Hz pulse to arrive
   noInterrupts();
   RTC_state = HIGH; //restoring the volatile interrupt flag
-  interrupts();
+  interrupts();*/
 
   //Get end time
   unsigned long CurrentTime = millis();
@@ -172,7 +182,6 @@ void loop() {
 }
 
 /*-----( Declare User-written Functions )-----*/
-
 void RTC_Interrupt(){
   RTC_state = LOW;  
 }
@@ -211,7 +220,7 @@ void slavesRespond(){
         Wire.write(char_array2);
       break;
 
-      case 3:   // Return 2nd packet
+      case 3:   // Return 3rd packet
         Wire.write(char_array3);
       break;
     }
