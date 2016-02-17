@@ -79,7 +79,7 @@ void setup() {
 
   RTC_init();
   //day(1-31), month(1-12), year(0-99), hour(0-23), minute(0-59), second(0-59)
-  SetTimeDate(3,2,16,15,17,02); 
+  SetTimeDate(16,2,16,12,29,00); 
 
   //interrupt for waiting the 1Hz pulse of RTC
   attachInterrupt(digitalPinToInterrupt(RTC_SQW), RTC_Interrupt, FALLING);
