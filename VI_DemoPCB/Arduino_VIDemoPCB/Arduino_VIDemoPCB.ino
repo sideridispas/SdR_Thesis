@@ -21,55 +21,48 @@
 #include <Wire.h>
 
 /*-----( Declare Constants and Pin Numbers )-----*/
-#define ONE_WIRE_BUS_PIN 4
-#define ADC_CS 7
-#define ADC_DRDY 2
-#define RTC_CS 8
-#define RTC_SQW 3
-#define DATA_READY_PIN 6
+#define ONE_WIRE_BUS_PIN 4 //Pin for the 1-wire bus that temp sensors are using for data
+#define ADC_CS 7 //Chip select for the ADS1256 ADC
+#define ADC_DRDY 2 //Data Ready pin for the ADS1256 ADC
+#define RTC_CS 8 //Chip select for the DS3234 RTC
+#define RTC_SQW 3 //Pin for the ouput of the Square Wave pulse of RTC (1Hz measuring clocking)
+#define DATA_READY_PIN 6 //Pin for outputting the flag "Data ready" (all datastrings) to be readen by the master arduino
 
 /*-----( Declare objects )-----*/
 // Setup a oneWire instance to communicate with any OneWire devices
 OneWire oneWire(ONE_WIRE_BUS_PIN);
 // Setup a ads12xx object to communicate with the ADS1256 ADC
 ads12xx ads1256(ADC_CS,ADC_DRDY);
-
 // Pass our oneWire reference to Dallas Temperature.
 DallasTemperature sensors(&oneWire);
 
 /*-----( Declare Variables )-----*/
+// DS18B20 Temperature sensors addresses
 DeviceAddress Probe01 = { 0x28, 0x69, 0xBA, 0xAE, 0x07, 0x00, 0x00, 0x7F }; 
 DeviceAddress Probe02 = { 0x28, 0xA8, 0xF3, 0xAF, 0x07, 0x00, 0x00, 0x42 };
 DeviceAddress Probe03 = { 0x28, 0x85, 0xC0, 0xAF, 0x07, 0x00, 0x00, 0x74 };
 DeviceAddress Probe04 = { 0x28, 0x39, 0xAF, 0xAF, 0x07, 0x00, 0x00, 0x70 };
 DeviceAddress Probe05 = { 0x28, 0xD8, 0xC0, 0xAE, 0x07, 0x00, 0x00, 0x9F };
 
-long data;
-float f_data, V1, V2, I, P, tempC1, tempC2, tempC3, tempC4, tempC5;
-
-String dataString1, dataString2, dataString3;
-
+long data; //variable for storing the result (long) of the ADC convertions
+float f_data, V1, V2, I, P, tempC1, tempC2, tempC3, tempC4, tempC5; //f_data: float version of ADC data, rest: readen data after conversion and calculations
+String dataString1, dataString2, dataString3; //Data strings used for the data transfer to master arduino through I2C bus
 volatile int RTC_state = HIGH; //interrupt flag for RTC's 1Hz pulse
-
 volatile int data_ready = LOW; //flag for i2c communication (data ready to send to master)
-
 byte LastMasterCommand = 0; //id of data packet to transmit to master
-
-int temp_res = 11; //temperature sensor resolution (9-12 bits)
-
+int temp_res = 11; //temperature sensor' output data resolution (9-12 bits)
 int visual = 1; //processing app:1 - arduino serial monitor:0
 
+
 void setup() {
-  // start serial port to show results
-  Serial.begin(9600);
-  ads1256.begin();
+  Serial.begin(9600); //start serial port to show results
+  ads1256.begin(); //begin init for ADC chip
   reg_init();  //ADC's register initialisation
-  sensors.begin(); //Initialize the Temperature measurement library
+  sensors.begin(); //initialize the Temperature measurement library
 
   delay(200); //wait for voltage reference to be stable
-  ads1256.SendCMD(SELFCAL); //self-calibration command
+  ads1256.SendCMD(SELFCAL); //ADC self-calibration command
   
-
   // set the resolution of temp sensors
   sensors.setResolution(Probe01, temp_res);
   sensors.setResolution(Probe02, temp_res);
@@ -77,35 +70,36 @@ void setup() {
   sensors.setResolution(Probe04, temp_res);
   sensors.setResolution(Probe05, temp_res);
 
-  RTC_init();
-  //day(1-31), month(1-12), year(0-99), hour(0-23), minute(0-59), second(0-59)
+  RTC_init();//initialize of RTC chip
+  //Seting the timestamp [day(1-31), month(1-12), year(0-99), hour(0-23), minute(0-59), second(0-59)]
   SetTimeDate(16,2,16,12,29,00); 
 
   //interrupt for waiting the 1Hz pulse of RTC
   attachInterrupt(digitalPinToInterrupt(RTC_SQW), RTC_Interrupt, FALLING);
 
-  Wire.begin(5);
-  Wire.onReceive(receiveCommand);
-  Wire.onRequest(slavesRespond);
+  Wire.begin(5); //i2c bus initialization
+  Wire.onReceive(receiveCommand); //first received data from master is the command (next datastring to transfer ID)
+  Wire.onRequest(slavesRespond); //sending back the requested datastring
 
-  pinMode(DATA_READY_PIN,OUTPUT); // data ready pin that interrupts on master side
+  pinMode(DATA_READY_PIN,OUTPUT); // data ready pin that triggers the interrupt on master side
   digitalWrite(DATA_READY_PIN, HIGH);
-  delay(100); //wait the system stability
   
+  delay(100); //wait the system stability
 }
 
 void loop() {
-
+  
+  //clearing the datastrings before storing the new data
   dataString1 = "";
   dataString2 = "";
   dataString3 = "";
-  data_ready = LOW;
+  
+  data_ready = LOW; //clear the "data ready" flag. It will be set when all datastrings are updated with the new data
+
+  unsigned long StartTime = millis();  //Get starting time
+  
   /************** VOLTAGE 1 MEASUREMENTS **************/
-
-  //Get starting time
-  unsigned long StartTime = millis();
-
-  ads1256.SetRegisterValue(MUX,B00100011); //AIN2 - AIN3
+  ads1256.SetRegisterValue(MUX,B00100011); //set the MUX register to inputs AIN2 - AIN3 for V1
   delay(50);
   delayMicroseconds(10);
   ads1256.SendCMD(SYNC);
