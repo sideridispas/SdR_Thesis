@@ -44,7 +44,6 @@ DeviceAddress Probe03 = { 0x28, 0x85, 0xC0, 0xAF, 0x07, 0x00, 0x00, 0x74 };
 DeviceAddress Probe04 = { 0x28, 0x39, 0xAF, 0xAF, 0x07, 0x00, 0x00, 0x70 };
 DeviceAddress Probe05 = { 0x28, 0xD8, 0xC0, 0xAE, 0x07, 0x00, 0x00, 0x9F };
 
-long data; //variable for storing the result (long) of the ADC convertions
 float f_data, V1, V2, I, P, tempC1, tempC2, tempC3, tempC4, tempC5; //f_data: float version of ADC data, rest: readen data after conversion and calculations
 String dataString1, dataString2, dataString3; //Data strings used for the data transfer to master arduino through I2C bus
 volatile int RTC_state = HIGH; //interrupt flag for RTC's 1Hz pulse
@@ -99,34 +98,8 @@ void loop() {
   unsigned long StartTime = millis();  //Get starting time
   
   /************** VOLTAGE 1 MEASUREMENTS **************/
-  ads1256.SetRegisterValue(MUX,B00100011); //set the MUX register to inputs AIN2 - AIN3 for V1
-  delay(50);
-  delayMicroseconds(10);
-  ads1256.SendCMD(SYNC);
-  delayMicroseconds(10);
-  ads1256.SendCMD(WAKEUP);
-  
-  data =  ads1256.GetConversion();
-  data = constrain(data, 0, 16777215);
-  
-  if((data >= 0) && (data <= 8388607)){
-    //positive
-    /*f_data = ((float)data/8388607.0)*78.0;
-    f_data = (f_data+0.1386)/1.4742;
-    V1 = (f_data+0.0105)/0.9998;*/
-    V1 = ((float)data/8388607.0)*78.0;
-    V1 = (V1+0.0525)/1.4824;
-    V1 = (V1+0.039)/0.999;
-  }
-  else if((data > 8388607) && (data <= 16777215)){
-    //negative
-    bitClear(data, 23);
-    data = 8388607 - data;
-    f_data = ((float)data/8388607.0)*78.0;
-    f_data = (f_data+0.1386)/1.4742;
-    f_data = (f_data+0.0105)/0.9998;
-    V1 = -1*f_data;
-  }
+
+  V1 = getCalibratedData(B00100011, 1.4824, -0.0525, 0.999, -0.039);
 
   if(visual){
     Serial.print(V1,4);
@@ -139,32 +112,8 @@ void loop() {
   }
   
   /************** VOLTAGE 2 MEASUREMENTS **************/
-  ads1256.SetRegisterValue(MUX,B01000101); //AIN4 - AIN5
-  delay(50);
-  delayMicroseconds(10);
-  ads1256.SendCMD(SYNC);
-  delayMicroseconds(10);
-  ads1256.SendCMD(WAKEUP);
-  
-  data =  ads1256.GetConversion();
-  data = constrain(data, 0, 16777215);
-  
-  if((data >= 0) && (data <= 8388607)){
-    //positive
-    /*f_data = ((float)data/8388607.0)*78.0;
-    V2 = (f_data+0.1161)/1.4968;*/
-    V2 = ((float)data/8388607.0)*78.0;
-    V2 = (V2 + 0.1683)/1.5042;
-    V2 = (V2 -0.0473)/0.9934;
-  }
-  else if((data > 8388607) && (data <= 16777215)){
-    //negative
-    bitClear(data, 23);
-    data = 8388607 - data;
-    f_data = ((float)data/8388607.0)*78.0;
-    f_data = (f_data+0.1161)/1.4968;
-    V2 = -1*f_data;
-  }
+
+  V2 = getCalibratedData(B01000101, 1.5042, -0.1683, 0.9934, -0.0473);
   
    if(visual){
       Serial.print(V2,4);
@@ -177,32 +126,9 @@ void loop() {
     }
 
   /************** CURRENT MEASUREMENTS **************/
-  ads1256.SetRegisterValue(MUX,B00010000); //AIN0 - AIN1
-  delay(50);
-  delayMicroseconds(10);
-  ads1256.SendCMD(SYNC);
-  delayMicroseconds(10);
-  ads1256.SendCMD(WAKEUP);
-  
-  data =  ads1256.GetConversion();
-  data = constrain(data, 0, 16777215);
-  
-  if((data >= 0) && (data <= 8388607)){
-    //positive
-    /*f_data = ((float)data/8388607.0)*78.0;
-    I = (f_data-0.321)/4.9331;*/
-    I = ((float)data/8388607.0)*78.0;
-    I = (I-0.1816)/4.9424;
-    I = (I-0.0205)/0.9994;
-  }
-  else if((data > 8388607) && (data <= 16777215)){
-    //negative
-    bitClear(data, 23);
-    data = 8388607 - data;
-    f_data = ((float)data/8388607.0)*78.0;
-    f_data = (f_data-0.321)/4.9331;
-    I = -1*f_data;
-  }
+
+  I = getCalibratedData(B00010000, 4.9424, 0.1816, 0.9994, 0.0205);
+ 
   if(visual){
     Serial.print(I,4);
     Serial.print(":");
@@ -490,3 +416,37 @@ void slavesRespond(){
     }
     LastMasterCommand = 0;
 }
+
+float getCalibratedData(int mux_value, float a1, float b1, float a2, float b2){
+  
+  long data; //variable for storing the result (long) of the ADC convertions
+  float Cal_data; //calibrated data variable to be returned in the end
+  
+  ads1256.SetRegisterValue(MUX,mux_value); //set the MUX register to corresponding inputs
+  delay(50);
+  delayMicroseconds(10);
+  ads1256.SendCMD(SYNC);
+  delayMicroseconds(10);
+  ads1256.SendCMD(WAKEUP);
+  
+  data =  ads1256.GetConversion();
+  data = constrain(data, 0, 16777215);
+  
+  if((data >= 0) && (data <= 8388607)){
+    //positive
+    Cal_data = ((float)data/8388607.0)*78.0;
+    Cal_data = (Cal_data-b1)/a1;
+    Cal_data = (Cal_data-b2)/a2;
+  }
+  else if((data > 8388607) && (data <= 16777215)){
+    //negative
+    bitClear(data, 23);
+    data = 8388607 - data;
+    Cal_data = ((float)data/8388607.0)*78.0;
+    Cal_data = (Cal_data-b1)/a1;
+    Cal_data = (Cal_data-b2)/a2;
+    Cal_data = -1*Cal_data;
+  }
+  return Cal_data;  
+}
+
