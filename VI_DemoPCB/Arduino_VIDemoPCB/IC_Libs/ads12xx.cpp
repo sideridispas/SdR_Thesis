@@ -25,14 +25,6 @@ void ads12xx::begin(){
 	attachInterrupt(digitalPinToInterrupt(_DRDY), DRDY_Interuppt, FALLING); //Interrupt setup for DRDY detection
 
 	delay(500);
-
-	//Message of succesful object creation - Paschalis
-	/*Serial.println("ADS12xx begin() finished");
-	Serial.print("CS:");
-	Serial.print(_CS);
-	Serial.print(", DRDY:");
-	Serial.println(_DRDY);*/
-
 }
 
 ads12xx::ads12xx() {} //default constructor - Paschalis
@@ -66,7 +58,6 @@ long ads12xx::GetConversion() {
 	noInterrupts();
 	*IState = HIGH;
 	interrupts();
-
 	return regData;
 }
 
@@ -154,4 +145,60 @@ void ads12xx::Reset(const int RESET_PIN) {
 	delayMicroseconds(100);
 	digitalWrite(_CS, HIGH);
 	SPI.endTransaction();
+}
+
+float ads12xx::getCalibratedData(int mux_value, float a1, float b1, float a2, float b2){
+  //returns the twice calibrated data of the conversion based on the trend line of raw data compared to DMM (y = ax + b)
+  
+  long data; //variable for storing the result (long) of the ADC convertions
+  float Cal_data; //calibrated data variable to be returned in the end
+  
+  ads12xx::SetRegisterValue(MUX,mux_value); //set the MUX register to corresponding inputs
+  delay(50);
+  ads12xx::SendCMD(SYNC);
+  delayMicroseconds(10);
+  ads12xx::SendCMD(WAKEUP);
+  
+  data =  ads12xx::GetConversion();
+  data = constrain(data, 0, 16777215);
+  
+  if((data >= 0) && (data <= 8388607)){
+    //positive
+    Cal_data = ((float)data/8388607.0)*78.0;
+    Cal_data = (Cal_data-b1)/a1;
+    Cal_data = (Cal_data-b2)/a2;
+  }
+  else if((data > 8388607) && (data <= 16777215)){
+    //negative
+    bitClear(data, 23);
+    data = 8388607 - data;
+    Cal_data = ((float)data/8388607.0)*78.0;
+    Cal_data = (Cal_data-b1)/a1;
+    Cal_data = (Cal_data-b2)/a2;
+    Cal_data = -1*Cal_data;
+  }
+  return Cal_data;  
+}
+
+void ads12xx::reg_init(){
+  unsigned long reg;
+  
+  //STATUS register (default: 48)
+  reg = ads12xx::GetRegisterValue(STATUS);
+  //reg = reg | B00000010; //BUFEN:1
+  reg = reg & B11110001; //ORDER, ACAL:0
+  ads12xx::SetRegisterValue(STATUS,reg);
+  
+  //ADCON register (default: 32)
+  ads12xx::SetRegisterValue(ADCON,B00100111); //PGA:64
+  
+  //DRATE register
+  ads12xx::SetRegisterValue(DRATE,B01100011); //01100011
+ 
+  //Registers' printing
+/*  for(int i=0;i<5;i++){
+    reg = ads1256.GetRegisterValue(i);
+    Serial.print("Reg 0x0");Serial.print(i);Serial.print(": ");
+    Serial.println(reg);
+  }*/
 }

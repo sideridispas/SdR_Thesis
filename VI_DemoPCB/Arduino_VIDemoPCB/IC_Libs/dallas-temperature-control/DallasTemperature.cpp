@@ -713,6 +713,21 @@ float DallasTemperature::toCelsius(float fahrenheit)
   return (fahrenheit - 32) / 1.8;
 }
 
+float DallasTemperature::printTemperature(DeviceAddress deviceAddress)
+{
+  float tempC = DallasTemperature::getTempC(deviceAddress);
+  if (tempC == -127.00) 
+  {
+  return(99.99);
+  } 
+  else
+  {
+  return(tempC);
+  //Serial.print(" F: ");
+  //Serial.print(DallasTemperature::toFahrenheit(tempC));
+  }
+}
+
 #if REQUIRESNEW
 
 // MnetCS - Allocates memory for DallasTemperature. Allows us to instance a new object

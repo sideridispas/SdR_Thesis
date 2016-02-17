@@ -1,20 +1,9 @@
 #ifndef ads12xx_H
 #define ads12xx_H
-
-//#define ADS1248
 #define ADS1256
-
-/*Serial Template */
-
-#ifdef ADS1248
-#include "ads1248.h"
-#endif // ADS1248
-
-#ifdef ADS1256
 #include "ads1256.h"
-#endif // ADS1256
-
 #include "SPI.h"
+
 class ads12xx {
 public:
 	ads12xx(); //default constructor - Paschalis
@@ -42,21 +31,11 @@ public:
 
 	struct regValues_t
 	{
-#ifdef ADS1248
-		uint8_t MUX0_val;
-		uint8_t VBIAS_val;
-		uint8_t MUX1_val;
-		uint8_t SYS0_val;
-		uint8_t IDAC0_val;
-		uint8_t IDAC1_val;
-#endif // ADS1248
-#ifdef ADS1256
 		uint8_t STATUS_val = STATUS_RESET;
 		uint8_t MUX_val = MUX_RESET;
 		uint8_t ADCON_val = ADCON_RESET;
 		uint8_t DRATE_val = DRATE_RESET;
 		uint8_t IO_val = IO_RESET;
-#endif // ADS1256
 	};
 
 	long readSingle(
@@ -71,6 +50,15 @@ public:
 	void SetRegister(
 		regValues_t regValues
 		);
+	float getCalibratedData(
+		int mux_value,
+		float a1,
+		float b1,
+		float a2,
+		float b2
+		);
+	void reg_init();
+
 
 private:
 	int _CS;

@@ -56,7 +56,7 @@ int visual = 1; //processing app:1 - arduino serial monitor:0
 void setup() {
   Serial.begin(9600); //start serial port to show results
   ads1256.begin(); //begin init for ADC chip
-  reg_init();  //ADC's register initialisation
+  ads1256.reg_init();  //ADC's register initialisation
   sensors.begin(); //initialize the Temperature measurement library
 
   delay(200); //wait for voltage reference to be stable
@@ -98,13 +98,13 @@ void loop() {
   unsigned long StartTime = millis();  //Get starting time
   
   // VOLTAGE 1 MEASUREMENTS
-  V1 = getCalibratedData(B00100011, 1.4824, -0.0525, 0.999, -0.039);
+  V1 = ads1256.getCalibratedData(B00100011, 1.4824, -0.0525, 0.999, -0.039);
   
   // VOLTAGE 2 MEASUREMENTS
-  V2 = getCalibratedData(B01000101, 1.5042, -0.1683, 0.9934, -0.0473);
+  V2 = ads1256.getCalibratedData(B01000101, 1.5042, -0.1683, 0.9934, -0.0473);
 
   // CURRENT MEASUREMENTS
-  I = getCalibratedData(B00010000, 4.9424, 0.1816, 0.9994, 0.0205);
+  I = ads1256.getCalibratedData(B00010000, 4.9424, 0.1816, 0.9994, 0.0205);
  
   // POWER CALCULATIONS
   P = V1 * I;
@@ -112,11 +112,11 @@ void loop() {
   // TEMPERATURE MEASUREMENTS  
   sensors.requestTemperatures(); //Command all devices on bus to read temperature  
 
-  tempC1 = printTemperature(Probe01);
-  tempC2 = printTemperature(Probe02);
-  tempC3 = printTemperature(Probe03);
-  tempC4 = printTemperature(Probe04);
-  tempC5 = printTemperature(Probe05);
+  tempC1 = sensors.printTemperature(Probe01);
+  tempC2 = sensors.printTemperature(Probe02);
+  tempC3 = sensors.printTemperature(Probe03);
+  tempC4 = sensors.printTemperature(Probe04);
+  tempC5 = sensors.printTemperature(Probe05);
 
   
   // DATASTRING FILLING
@@ -170,45 +170,9 @@ void loop() {
 
 /*-----( Declare User-written Functions )-----*/
 
-void reg_init(){
-  unsigned long reg;
-  
-  //STATUS register (default: 48)
-  reg = ads1256.GetRegisterValue(STATUS);
-  //reg = reg | B00000010; //BUFEN:1
-  reg = reg & B11110001; //ORDER, ACAL:0
-  ads1256.SetRegisterValue(STATUS,reg);
-  
-  //ADCON register (default: 32)
-  ads1256.SetRegisterValue(ADCON,B00100111); //PGA:64
-  
-  //DRATE register
-  ads1256.SetRegisterValue(DRATE,B01100011); //01100011
- 
-  //Registers' printing
-/*  for(int i=0;i<5;i++){
-    reg = ads1256.GetRegisterValue(i);
-    Serial.print("Reg 0x0");Serial.print(i);Serial.print(": ");
-    Serial.println(reg);
-  }*/
-}
 
-float printTemperature(DeviceAddress deviceAddress)
-{
 
-float tempC = sensors.getTempC(deviceAddress);
 
-   if (tempC == -127.00) 
-   {
-   return(99.99);
-   } 
-   else
-   {
-   return(tempC);
-   //Serial.print(" F: ");
-   //Serial.print(DallasTemperature::toFahrenheit(tempC));
-   }
-}
 
 int RTC_init(){ 
     pinMode(RTC_CS,OUTPUT); // chip select
@@ -339,39 +303,5 @@ void slavesRespond(){
       break;
     }
     LastMasterCommand = 0;
-}
-
-float getCalibratedData(int mux_value, float a1, float b1, float a2, float b2){
-  //returns the twice calibrated data of the conversion based on the trend line of raw data compared to DMM (y = ax + b)
-  
-  long data; //variable for storing the result (long) of the ADC convertions
-  float Cal_data; //calibrated data variable to be returned in the end
-  
-  ads1256.SetRegisterValue(MUX,mux_value); //set the MUX register to corresponding inputs
-  delay(50);
-  delayMicroseconds(10);
-  ads1256.SendCMD(SYNC);
-  delayMicroseconds(10);
-  ads1256.SendCMD(WAKEUP);
-  
-  data =  ads1256.GetConversion();
-  data = constrain(data, 0, 16777215);
-  
-  if((data >= 0) && (data <= 8388607)){
-    //positive
-    Cal_data = ((float)data/8388607.0)*78.0;
-    Cal_data = (Cal_data-b1)/a1;
-    Cal_data = (Cal_data-b2)/a2;
-  }
-  else if((data > 8388607) && (data <= 16777215)){
-    //negative
-    bitClear(data, 23);
-    data = 8388607 - data;
-    Cal_data = ((float)data/8388607.0)*78.0;
-    Cal_data = (Cal_data-b1)/a1;
-    Cal_data = (Cal_data-b2)/a2;
-    Cal_data = -1*Cal_data;
-  }
-  return Cal_data;  
 }
 

@@ -189,6 +189,8 @@ class DallasTemperature
   // convert from farenheit to celsius
   static float toCelsius(const float);
 
+  float printTemperature(DeviceAddress deviceAddress);
+
   #if REQUIRESNEW
 
   // initalize memory area
