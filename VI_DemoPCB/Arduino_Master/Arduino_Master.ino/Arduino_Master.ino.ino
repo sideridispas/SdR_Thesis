@@ -43,7 +43,6 @@ int printPacket(int n){
   Wire.write(n); // n packet request
   delay(20);
   Wire.endTransmission();
-
   
   // GET RESPONSE FOR n PACKET
   String receivedValue = "";  

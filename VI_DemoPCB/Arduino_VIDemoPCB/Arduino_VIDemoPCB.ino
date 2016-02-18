@@ -7,7 +7,7 @@
 *            SCK     MOSI  MISO    INT     I/O          *
 *            13      11    12      2       7            *
 *                                                       *
-*    TEMP_1WIRE_BUS: PIN 3                              *
+*    TEMP_1WIRE_BUS: PIN 4                              *
 *                                                       *
 *    RTC:   SQW | CLK | MISO |  MOSI |  SS              *                                      
 *           3     13    12      11      8               *
@@ -17,12 +17,13 @@
 /*-----( Import needed libraries )-----*/
 #include "IC_Libs/ads12xx.h" //ADC ADS1256 libraries
 #include "IC_Libs/OneWire/OneWire.h" //Temperature sensor DS18B20 libraries
-#include "IC_Libs/dallas-temperature-control/DallasTemperature.h"
-#include "IC_Libs/ds3234_RTC/ds3234.h"
-#include <Wire.h>
+#include "IC_Libs/dallas-temperature-control/DallasTemperature.h" //Temperature sensor DS18B20 libraries
+#include "IC_Libs/ds3234_RTC/ds3234.h" //Real time clock DS3234 Library
+#include <Wire.h> //I2C Library for Master-Slave communication
 
 /*-----( Declare Constants and Pin Numbers )-----*/
 #define ONE_WIRE_BUS_PIN 4 //Pin for the 1-wire bus that temp sensors are using for data
+#define ONE_WIRE_BUS_PIN2 5
 #define ADC_CS 7 //Chip select for the ADS1256 ADC
 #define ADC_DRDY 2 //Data Ready pin for the ADS1256 ADC
 #define RTC_CS 8 //Chip select for the DS3234 RTC
@@ -33,9 +34,9 @@
 // Setup a ads12xx object to communicate with the ADS1256 ADC
 ads12xx ads1256(ADC_CS,ADC_DRDY);
 // Setup a oneWire instance to communicate with any OneWire devices
-OneWire oneWire1(ONE_WIRE_BUS_PIN);
+OneWire oneWire(ONE_WIRE_BUS_PIN);
 // Pass our oneWire reference to Dallas Temperature.
-DallasTemperature temp_sensors(&oneWire1);
+DallasTemperature temp_sensors(&oneWire);
 // Setup a ds3234 object
 ds3234 rtc(RTC_CS);
 
@@ -49,18 +50,20 @@ DeviceAddress Probe05 = { 0x28, 0xD8, 0xC0, 0xAE, 0x07, 0x00, 0x00, 0x9F };
 DeviceAddress Probe06 = { 0x28, 0x60, 0x06, 0x81, 0x07, 0x00, 0x00, 0x6D };
 DeviceAddress Probe07 = { 0x28, 0x50, 0x2C, 0x81, 0x07, 0x00, 0x00, 0xC5 };
 
-float f_data, V1, V2, I, P, tempC1, tempC2, tempC3, tempC4, tempC5, tempC6, tempC7; //f_data: float version of ADC data, rest: data after conversion and calculations
+float V1, V2, I, P, tempC1, tempC2, tempC3, tempC4, tempC5, tempC6, tempC7; //data after conversion and calculations
 String dataString1, dataString2, dataString3, dataString4; //Data strings used for the data transfer to master arduino through I2C bus
 volatile int RTC_state = HIGH; //interrupt flag for RTC's 1Hz pulse
 volatile int data_ready = LOW; //flag for i2c communication (data ready to send to master)
 byte LastMasterCommand = 0; //id of data packet to transmit to master
 int temp_res = 11; //temperature sensor' output data resolution (9-12 bits)
 
+
 void setup() {
   Serial.begin(9600); //start serial port to show results
   ads1256.begin(); //begin init for ADC chip
   ads1256.reg_init();  //ADC's register initialisation
   temp_sensors.begin(); //initialize the Temperature measurement library
+  temp_sensors.setWaitForConversion(LOW); //flag of temperature library (check DallasTemperature above setWaitForConversion)
   
   delay(200); //wait for voltage reference to be stable
   ads1256.SendCMD(SELFCAL); //ADC self-calibration command
@@ -74,6 +77,8 @@ void setup() {
   temp_sensors.setResolution(Probe06, temp_res);
   temp_sensors.setResolution(Probe07, temp_res);
 
+
+
   rtc.RTC_init();//initialize of RTC chip
   //Seting the timestamp [day(1-31), month(1-12), year(0-99), hour(0-23), minute(0-59), second(0-59)]
   rtc.SetTimeDate(16,2,16,12,29,00); 
@@ -81,19 +86,20 @@ void setup() {
   //interrupt for waiting the 1Hz pulse of RTC
   attachInterrupt(digitalPinToInterrupt(RTC_SQW), RTC_Interrupt, FALLING);
 
-  Wire.begin(5); //i2c bus initialization
+  Wire.begin(5); //i2c bus initialization - slave address 5
   Wire.onReceive(receiveCommand); //first received data from master is the command (next datastring to transfer ID)
   Wire.onRequest(slavesRespond); //sending back the requested datastring
 
-  pinMode(DATA_READY_PIN,OUTPUT); // data ready pin that triggers the interrupt on master side
-  digitalWrite(DATA_READY_PIN, HIGH);
+  pinMode(DATA_READY_PIN,OUTPUT); // "data ready" pin that triggers the interrupt on master side
+  digitalWrite(DATA_READY_PIN, HIGH); //initialy the pin is HIGH (inverted logic because of falling edge interrupt)
   
-  delay(100); //wait the system stability
+  delay(100); //wait for system stability
 }
 
 void loop() {
 
   unsigned long StartTime = millis();  //Get starting time
+  temp_sensors.requestTemperatures(); //Command all devices on bus to read temperature
   
   //clearing the datastrings before storing the new data
   dataString1 = "";
@@ -104,20 +110,20 @@ void loop() {
   data_ready = LOW; //clear the "data ready" flag. It will be set when all datastrings are updated with the new data
 
   // VOLTAGE 1 MEASUREMENTS
-  V1 = ads1256.getCalibratedData(B00100011, 1.4824, -0.0525, 0.999, -0.039);
+  V1 = ads1256.getCalibratedData(B00100011, 1.4824, -0.0525, 0.999, -0.039); //inputs 2&3, a1=1.4824, b1=-0.0525, a2=0.999, b2=-0.039
   
   // VOLTAGE 2 MEASUREMENTS
-  V2 = ads1256.getCalibratedData(B01000101, 1.5042, -0.1683, 0.9934, -0.0473);
+  V2 = ads1256.getCalibratedData(B01000101, 1.5042, -0.1683, 0.9934, -0.0473); //inputs 4&5, a1=1.5042, b1=-0.1683, a2=0.9934, b2=-0.0473
 
   // CURRENT MEASUREMENTS
-  I = ads1256.getCalibratedData(B00010000, 4.9424, 0.1816, 0.9994, 0.0205);
+  I = ads1256.getCalibratedData(B00010000, 4.9424, 0.1816, 0.9994, 0.0205); //inputs 0&1, a1=4.9424, b1=0.1816, a2=0.9994, b2=0.0205
  
   // POWER CALCULATIONS
   P = V1 * I;
-  
-  // TEMPERATURE MEASUREMENTS  
-  temp_sensors.requestTemperatures(); //Command all devices on bus to read temperature
 
+  // TEMPERATURE MEASUREMENTS
+  delay(200); //wait for the temperature sensors' conversion (11bits waiting is 375ms - 190ms electrical measurements)
+  
   tempC1 = temp_sensors.printTemperature(Probe01);
   tempC2 = temp_sensors.printTemperature(Probe02);
   tempC3 = temp_sensors.printTemperature(Probe03);
@@ -125,6 +131,7 @@ void loop() {
   tempC5 = temp_sensors.printTemperature(Probe05);
   tempC6 = temp_sensors.printTemperature(Probe06);
   tempC7 = temp_sensors.printTemperature(Probe07);
+
 
   // DATASTRING FILLING
   dataString1 = dataString1 + String(V1,4);
@@ -178,7 +185,7 @@ void loop() {
   unsigned long CurrentTime = millis();
   unsigned long ElapsedTime = CurrentTime - StartTime;
   Serial.print(ElapsedTime);
-  Serial.println(" ms");
+  Serial.println(" ms");  
 }
 
 /*-----( Declare User-written Functions )-----*/
