@@ -50,8 +50,9 @@ DeviceAddress Probe05 = { 0x28, 0xD8, 0xC0, 0xAE, 0x07, 0x00, 0x00, 0x9F };
 DeviceAddress Probe06 = { 0x28, 0x60, 0x06, 0x81, 0x07, 0x00, 0x00, 0x6D };
 DeviceAddress Probe07 = { 0x28, 0x50, 0x2C, 0x81, 0x07, 0x00, 0x00, 0xC5 };
 
-float V1, V2, I, P, tempC1, tempC2, tempC3, tempC4, tempC5, tempC6, tempC7; //data after conversion and calculations
-String dataString1, dataString2, dataString3, dataString4; //Data strings used for the data transfer to master arduino through I2C bus
+
+float V1, V2, I, P, tempC[20]; //data after conversion and calculations
+String dataString1,dataString2,dataString3,dataString4,dataString5,dataString6; //Data strings used for the data transfer to master arduino through I2C bus
 volatile int RTC_state = HIGH; //interrupt flag for RTC's 1Hz pulse
 volatile int data_ready = LOW; //flag for i2c communication (data ready to send to master)
 byte LastMasterCommand = 0; //id of data packet to transmit to master
@@ -106,6 +107,8 @@ void loop() {
   dataString2 = "";
   dataString3 = "";
   dataString4 = "";
+  dataString5 = "";
+  dataString6 = "";
   
   data_ready = LOW; //clear the "data ready" flag. It will be set when all datastrings are updated with the new data
 
@@ -122,52 +125,92 @@ void loop() {
   P = V1 * I;
 
   // TEMPERATURE MEASUREMENTS
-  delay(200); //wait for the temperature sensors' conversion (11bits waiting is 375ms - 190ms electrical measurements)
+  delay(150); //wait for the temperature sensors' conversion (11bits waiting is 375ms - 190ms electrical measurements)
   
-  tempC1 = temp_sensors.printTemperature(Probe01);
-  tempC2 = temp_sensors.printTemperature(Probe02);
-  tempC3 = temp_sensors.printTemperature(Probe03);
-  tempC4 = temp_sensors.printTemperature(Probe04);
-  tempC5 = temp_sensors.printTemperature(Probe05);
-  tempC6 = temp_sensors.printTemperature(Probe06);
-  tempC7 = temp_sensors.printTemperature(Probe07);
+  tempC[0] = temp_sensors.printTemperature(Probe01);
+  tempC[1] = temp_sensors.printTemperature(Probe02);
+  tempC[2] = temp_sensors.printTemperature(Probe03);
+  tempC[3] = temp_sensors.printTemperature(Probe04);
+  tempC[4] = temp_sensors.printTemperature(Probe05);
+  tempC[5] = temp_sensors.printTemperature(Probe06);
+  tempC[6] = temp_sensors.printTemperature(Probe07);
 
+  tempC[7] = 8.13; //just dummy values xx.13 because I dont have the sensors 8-20 yet
+  tempC[8] = 9.13;
+  tempC[9] = 10.13;
+  tempC[10] = 11.13;
+  tempC[11] = 12.13;
+  tempC[12] = 13.13;
+  tempC[13] = 14.13;
+  tempC[14] = 15.13;
+  tempC[15] = 16.13;
+  tempC[16] = 17.13;
+  tempC[17] = 18.13;
+  tempC[18] = 19.13;
+  tempC[19] = 20.13;
+
+  delay(220); //simulate the time reading sensors 8-20
 
   // DATASTRING FILLING
-  dataString1 = dataString1 + String(V1,4);
-  dataString1.concat(",");
-  dataString1 = dataString1 + String(V2,4);
+  dataString1.concat(rtc.ReadTimeDate());
   dataString1.concat(",");
   dataString1 = dataString1 + String(I,4);
   dataString1.concat(",");
 
+  dataString2 = dataString2 + String(V1,4);
   dataString2.concat(",");
-  dataString2 = dataString2 + String(tempC1,2);
+  dataString2 = dataString2 + String(V2,4);
   dataString2.concat(",");
-  dataString2 = dataString2 + String(tempC2,2);
+  dataString2 = dataString2 + String(P,4);
   dataString2.concat(",");
-  dataString2 = dataString2 + String(tempC3,2);
-  dataString2.concat(",");
-  dataString2 = dataString2 + String(tempC4,2);
-  dataString2.concat(",");
-  dataString2 = dataString2 + String(tempC5,2);
 
+  dataString3 = dataString3 + String(tempC[0],2);
   dataString3.concat(",");
-  dataString3 = dataString3 + String(P,4);
+  dataString3 = dataString3 + String(tempC[1],2);
   dataString3.concat(",");
-  dataString3.concat(rtc.ReadTimeDate());
+  dataString3 = dataString3 + String(tempC[2],2);
   dataString3.concat(",");
+  dataString3 = dataString3 + String(tempC[3],2);
+  dataString3.concat(",");
+  dataString3 = dataString3 + String(tempC[4],2);
 
+  dataString4 = dataString4 + String(tempC[5],2);
   dataString4.concat(",");
-  dataString4 = dataString4 + String(tempC6,2);
+  dataString4 = dataString4 + String(tempC[6],2);
   dataString4.concat(",");
-  dataString4 = dataString4 + String(tempC7,2);
+  dataString4 = dataString4 + String(tempC[7],2);
   dataString4.concat(",");
+  dataString4 = dataString4 + String(tempC[8],2);
+  dataString4.concat(",");
+  dataString4 = dataString4 + String(tempC[9],2);
 
-  Serial.print(dataString1);
-  Serial.print(dataString3);
-  Serial.print(dataString2);
+  dataString5 = dataString5 + String(tempC[10],2);
+  dataString5.concat(",");
+  dataString5 = dataString5 + String(tempC[11],2);
+  dataString5.concat(",");
+  dataString5 = dataString5 + String(tempC[12],2);
+  dataString5.concat(",");
+  dataString5 = dataString5 + String(tempC[13],2);
+  dataString5.concat(",");
+  dataString5 = dataString5 + String(tempC[14],2);
+
+  dataString6 = dataString6 + String(tempC[15],2);
+  dataString6.concat(",");
+  dataString6 = dataString6 + String(tempC[16],2);
+  dataString6.concat(",");
+  dataString6 = dataString6 + String(tempC[17],2);
+  dataString6.concat(",");
+  dataString6 = dataString6 + String(tempC[18],2);
+  dataString6.concat(",");
+  dataString6 = dataString6 + String(tempC[19],2);
+
+  
+  Serial.println(dataString1);
+  Serial.println(dataString2);
+  Serial.println(dataString3);
   Serial.println(dataString4);
+  Serial.println(dataString5);
+  Serial.println(dataString6);
 
   //Datastrings ready to be transfered to master
   digitalWrite(DATA_READY_PIN, LOW); //falling edge trigger interrupt
@@ -176,10 +219,10 @@ void loop() {
 
   //FREE TIME: here we are just waiting for the second to be completed
 
-  /*waitforRTC(); //Waiting for the 1Hz pulse to arrive
+  waitforRTC(); //Waiting for the 1Hz pulse to arrive
   noInterrupts();
   RTC_state = HIGH; //restoring the volatile interrupt flag
-  interrupts();*/
+  interrupts();
 
   //Get end time
   unsigned long CurrentTime = millis();
@@ -202,33 +245,53 @@ void receiveCommand(int howMany){
 }
 
 void slavesRespond(){
-    int str_len = dataString1.length() + 1; 
-    char char_array1[str_len];
-    dataString1.toCharArray(char_array1, str_len);
-
-    str_len = dataString2.length() + 1; 
-    char char_array2[str_len];
-    dataString2.toCharArray(char_array2, str_len);
-
-    str_len = dataString3.length() + 1; 
-    char char_array3[str_len];
-    dataString3.toCharArray(char_array3, str_len);
-    
+    int str_len;
+            
     switch(LastMasterCommand){
       case 0:   // No new command was received
-        Wire.write("S"); //Stay still
+        //Wire.write("S"); //Stay still
       break;
       
       case 1:   // Return 1st packet
+        str_len = dataString1.length() + 1; 
+        char char_array1[str_len];
+        dataString1.toCharArray(char_array1, str_len);
         Wire.write(char_array1);
       break;
   
       case 2:   // Return 2nd packet
+        str_len = dataString2.length() + 1; 
+        char char_array2[str_len];
+        dataString2.toCharArray(char_array2, str_len);
         Wire.write(char_array2);
       break;
 
       case 3:   // Return 3rd packet
+        str_len = dataString3.length() + 1; 
+        char char_array3[str_len];
+        dataString3.toCharArray(char_array3, str_len);
         Wire.write(char_array3);
+      break;
+
+      case 4:   // Return 4th packet
+        str_len = dataString4.length() + 1; 
+        char char_array4[str_len];
+        dataString4.toCharArray(char_array4, str_len);
+        Wire.write(char_array4);
+      break;
+  
+      case 5:   // Return 5th packet
+        str_len = dataString5.length() + 1; 
+        char char_array5[str_len];
+        dataString5.toCharArray(char_array5, str_len);
+        Wire.write(char_array5);
+      break;
+
+      case 6:   // Return 6th packet
+        str_len = dataString6.length() + 1; 
+        char char_array6[str_len];
+        dataString6.toCharArray(char_array6, str_len);
+        Wire.write(char_array6);
       break;
     }
     LastMasterCommand = 0;

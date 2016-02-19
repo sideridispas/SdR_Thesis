@@ -81,7 +81,7 @@ String ds3234::ReadTimeDate(){
   temp.concat(TimeDate[5]);
   temp.concat("/") ;
   temp.concat(TimeDate[6]);
-  temp.concat(" ") ;
+  temp.concat(",") ;
   temp.concat(TimeDate[2]);
   temp.concat(":") ;
   temp.concat(TimeDate[1]);

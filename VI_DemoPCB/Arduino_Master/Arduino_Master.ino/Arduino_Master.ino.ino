@@ -26,13 +26,22 @@ void loop()
   noInterrupts();
   data_ready = HIGH;
   interrupts();
+
+  unsigned long StartTime = millis();  //Get starting time
   
   while(!printPacket(1)){}
-  //delay(10);
-  while(!printPacket(3)){}
-  //delay(10);
   while(!printPacket(2)){}
+  while(!printPacket(3)){}
+  while(!printPacket(4)){}
+  while(!printPacket(5)){}
+  while(!printPacket(6)){}
   Serial.println();
+  
+  //Get end time
+  unsigned long CurrentTime = millis();
+  unsigned long ElapsedTime = CurrentTime - StartTime;
+  Serial.print(ElapsedTime);
+  Serial.println(" ms"); 
   
   delay(500);
 }
@@ -47,11 +56,11 @@ int printPacket(int n){
   // GET RESPONSE FOR n PACKET
   String receivedValue = "";  
   int first_time = HIGH;
-  if(n == 1){
-    Wire.requestFrom(5,30);
-  }else if(n == 2){
-    Wire.requestFrom(5,30);
-  }else if(n == 3){
+  if (n == 1){
+    Wire.requestFrom(5,32);
+  }else if (n == 2){
+    Wire.requestFrom(5,32);
+  }else{
     Wire.requestFrom(5,29);
   }
     
@@ -70,7 +79,7 @@ int printPacket(int n){
   
   //Serial.print(n);
   //Serial.println(" packet received:");
-  Serial.print(receivedValue);
+  Serial.println(receivedValue);
   return 1;
 }
 
