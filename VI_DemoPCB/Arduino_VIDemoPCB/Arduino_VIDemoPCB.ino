@@ -125,7 +125,7 @@ void loop() {
   P = V1 * I;
 
   // TEMPERATURE MEASUREMENTS
-  delay(150); //wait for the temperature sensors' conversion (11bits waiting is 375ms - 190ms electrical measurements)
+  delay(180); //wait for the temperature sensors' conversion (11bits waiting is 375ms - 190ms electrical measurements)
   
   tempC[0] = temp_sensors.printTemperature(Probe01);
   tempC[1] = temp_sensors.printTemperature(Probe02);
@@ -155,14 +155,14 @@ void loop() {
   dataString1.concat(rtc.ReadTimeDate());
   dataString1.concat(",");
   dataString1 = dataString1 + String(I,4);
-  dataString1.concat(",");
+  dataString1.concat("e");
 
   dataString2 = dataString2 + String(V1,4);
   dataString2.concat(",");
   dataString2 = dataString2 + String(V2,4);
   dataString2.concat(",");
   dataString2 = dataString2 + String(P,4);
-  dataString2.concat(",");
+  dataString2.concat("e");
 
   dataString3 = dataString3 + String(tempC[0],2);
   dataString3.concat(",");
@@ -173,6 +173,7 @@ void loop() {
   dataString3 = dataString3 + String(tempC[3],2);
   dataString3.concat(",");
   dataString3 = dataString3 + String(tempC[4],2);
+  dataString3.concat("e");
 
   dataString4 = dataString4 + String(tempC[5],2);
   dataString4.concat(",");
@@ -183,6 +184,7 @@ void loop() {
   dataString4 = dataString4 + String(tempC[8],2);
   dataString4.concat(",");
   dataString4 = dataString4 + String(tempC[9],2);
+  dataString4.concat("e");
 
   dataString5 = dataString5 + String(tempC[10],2);
   dataString5.concat(",");
@@ -193,6 +195,7 @@ void loop() {
   dataString5 = dataString5 + String(tempC[13],2);
   dataString5.concat(",");
   dataString5 = dataString5 + String(tempC[14],2);
+  dataString5.concat("e");
 
   dataString6 = dataString6 + String(tempC[15],2);
   dataString6.concat(",");
@@ -203,14 +206,15 @@ void loop() {
   dataString6 = dataString6 + String(tempC[18],2);
   dataString6.concat(",");
   dataString6 = dataString6 + String(tempC[19],2);
+  dataString6.concat("e");
 
   
-  Serial.println(dataString1);
+  /*Serial.println(dataString1);
   Serial.println(dataString2);
   Serial.println(dataString3);
   Serial.println(dataString4);
   Serial.println(dataString5);
-  Serial.println(dataString6);
+  Serial.println(dataString6);*/
 
   //Datastrings ready to be transfered to master
   digitalWrite(DATA_READY_PIN, LOW); //falling edge trigger interrupt
