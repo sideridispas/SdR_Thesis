@@ -6,7 +6,7 @@
 #define SD_CS 10 //SD Card module Chip select
 volatile int data_ready = HIGH; //interrupt flag for data ready from slave
 
-String p1, p2,p3,p4,p5,p6;
+String p1,p2,p3,p4,p5,p6;
 
 
 void setup()
@@ -43,7 +43,7 @@ void setup()
   Serial.println("System Ready");
 
   //Writing the column titles
-  File dataFile = SD.open("datalog.csv", FILE_WRITE);
+  File dataFile = SD.open("data6.csv", FILE_WRITE);
   dataFile.print("Date,Time,I,V1,V2,P");
   for (int i=1;i<21;i++){
         dataFile.print(",temp");
@@ -52,7 +52,7 @@ void setup()
   dataFile.println();
   dataFile.close();
   
-  //delay(100);
+  delay(100);
 }
 
 void loop()
@@ -64,27 +64,46 @@ void loop()
 
   unsigned long StartTime = millis();  //Get starting time
 
-  File dataFile = SD.open("datalog.csv", FILE_WRITE);
+  File dataFile = SD.open("data6.csv", FILE_WRITE);
   // if the file is available, write to it:
   if (dataFile) {
-    p1 = getPacket(1).substring(0,getPacket(1).indexOf('e'));
+    p1 = getPacket(1);
+    p2 = getPacket(2);
+    p3 = getPacket(3);
+    p4 = getPacket(4);
+    p5 = getPacket(5);
+    p6 = getPacket(6);
+
+    //Get end time
+  unsigned long CurrentTime = millis();
+  unsigned long ElapsedTime = CurrentTime - StartTime;
+  Serial.print(ElapsedTime);
+  Serial.println(" ms");
+
+    p1 = p1.substring(0,p1.indexOf('e'));
+    p2 = p2.substring(0,p2.indexOf('e'));
+    p3 = p3.substring(0,p3.indexOf('e'));
+    p4 = p4.substring(0,p4.indexOf('e'));
+    p5 = p5.substring(0,p5.indexOf('e'));
+    p6 = p6.substring(0,p6.indexOf('e'));
+    
     dataFile.print(p1);
     dataFile.print(',');
-    p2 = getPacket(2).substring(0,getPacket(2).indexOf('e'));
     dataFile.print(p2);
     dataFile.print(',');
-    p3 = getPacket(3).substring(0,getPacket(3).indexOf('e'));
     dataFile.print(p3);
     dataFile.print(',');
-    p4 = getPacket(4).substring(0,getPacket(4).indexOf('e'));
     dataFile.print(p4);
     dataFile.print(',');
-    p5 = getPacket(5).substring(0,getPacket(5).indexOf('e'));
     dataFile.print(p5);
     dataFile.print(',');
-    p6 = getPacket(6).substring(0,getPacket(6).indexOf('e'));
     dataFile.println(p6);
     dataFile.close();
+
+    CurrentTime = millis();
+    ElapsedTime = CurrentTime - StartTime;
+    Serial.print(ElapsedTime);
+    Serial.println(" ms");
     
     // print to the serial port too:
     Serial.println(p1);
@@ -98,51 +117,7 @@ void loop()
   else {
     Serial.println("error opening file!");
   }
-  
-  //Get end time
-  unsigned long CurrentTime = millis();
-  unsigned long ElapsedTime = CurrentTime - StartTime;
-  Serial.print(ElapsedTime);
-  Serial.println(" ms"); 
-  
   delay(500);
-}
-
-int printPacket(int n){
-  // SEND COMMAND FOR n PACKET
-  Wire.beginTransmission(5);
-  Wire.write(n); // n packet request
-  delay(20);
-  Wire.endTransmission();
-  
-  // GET RESPONSE FOR n PACKET
-  String receivedValue = "";  
-  int first_time = HIGH;
-  if (n == 1){
-    Wire.requestFrom(5,32);
-  }else if (n == 2){
-    Wire.requestFrom(5,32);
-  }else{
-    Wire.requestFrom(5,29);
-  }
-    
-  while(Wire.available()){
-    char c = Wire.read();
-    if(first_time){
-      if(c == 'N'){
-        //Serial.println("Not ready");
-        return 0;
-      }else{
-        first_time = LOW;
-      }
-    }
-    receivedValue =  receivedValue + c;
-  }
-  
-  //Serial.print(n);
-  //Serial.println(" packet received:");
-  Serial.println(receivedValue);
-  return 1;
 }
 
 void Data_Interrupt(){
@@ -157,7 +132,7 @@ String getPacket(int n){
   // SEND COMMAND FOR n PACKET
   Wire.beginTransmission(5);
   Wire.write(n); // n packet request
-  delay(20);
+  //delay(10);
   Wire.endTransmission();
   
   // GET RESPONSE FOR n PACKET
