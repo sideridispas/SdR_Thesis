@@ -12,7 +12,7 @@ String p1,p2,p3,p4,p5,p6;
 void setup()
 {
   Wire.begin();
-  Serial.begin(9600);
+  Serial.begin(115200);
 
   //set up interrupt for data ready waiting from slave
   attachInterrupt(digitalPinToInterrupt(DATA_INT), Data_Interrupt, FALLING);
@@ -43,7 +43,7 @@ void setup()
   Serial.println("System Ready");
 
   //Writing the column titles
-  File dataFile = SD.open("data10.csv", FILE_WRITE);
+  File dataFile = SD.open("data1.csv", FILE_WRITE);
   dataFile.print("Date,Time,I,V1,V2,P");
   for (int i=1;i<21;i++){
         dataFile.print(",temp");
@@ -64,7 +64,7 @@ void loop()
 
   unsigned long StartTime = millis();  //Get starting time
 
-  File dataFile = SD.open("data10.csv", FILE_WRITE);
+  File dataFile = SD.open("data1.csv", FILE_WRITE);
   // if the file is available, write to it:
   if (dataFile) {
     p1 = getPacket(1);
