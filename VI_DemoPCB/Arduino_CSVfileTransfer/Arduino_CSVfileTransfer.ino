@@ -5,6 +5,7 @@
 #define SD_CS 10 //SD Card module Chip select
 
 String a = "";
+char temp;
 
 void setup()
 {
@@ -38,7 +39,7 @@ void setup()
     // read from the file until there's nothing else in it:
     while (dataFile.available()){
       
-      char temp = dataFile.read();
+      temp = dataFile.read();
 
       if(temp != '\n'){
         a = a + temp;        
