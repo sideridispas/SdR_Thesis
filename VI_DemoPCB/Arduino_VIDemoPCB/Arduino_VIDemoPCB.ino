@@ -234,12 +234,12 @@ void loop() {
   dataString6.concat("e");
 
   
-  Serial.println(dataString1);
+/*  Serial.println(dataString1);
   Serial.println(dataString2);
   Serial.println(dataString3);
   Serial.println(dataString4);
   Serial.println(dataString5);
-  Serial.println(dataString6);
+  Serial.println(dataString6);*/
 
   //Datastrings ready to be transfered to master
   digitalWrite(DATA_READY_PIN, LOW); //falling edge trigger interrupt
@@ -248,11 +248,11 @@ void loop() {
 
   //FREE TIME: here we are just waiting for the second to be completed
 
-/*  waitforRTC(); //Waiting for the 1Hz pulse to arrive
+  waitforRTC(); //Waiting for the 1Hz pulse to arrive
   noInterrupts();
   RTC_state = HIGH; //restoring the volatile interrupt flag
   interrupts();
-*/
+
   //Get end time
   unsigned long CurrentTime = millis();
   unsigned long ElapsedTime = CurrentTime - StartTime;
