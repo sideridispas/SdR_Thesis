@@ -47,8 +47,21 @@ DeviceAddress Probe02 = { 0x28, 0xA8, 0xF3, 0xAF, 0x07, 0x00, 0x00, 0x42 };
 DeviceAddress Probe03 = { 0x28, 0x85, 0xC0, 0xAF, 0x07, 0x00, 0x00, 0x74 };
 DeviceAddress Probe04 = { 0x28, 0x39, 0xAF, 0xAF, 0x07, 0x00, 0x00, 0x70 };
 DeviceAddress Probe05 = { 0x28, 0xD8, 0xC0, 0xAE, 0x07, 0x00, 0x00, 0x9F };
-DeviceAddress Probe06 = { 0x28, 0x60, 0x06, 0x81, 0x07, 0x00, 0x00, 0x6D };
-DeviceAddress Probe07 = { 0x28, 0x50, 0x2C, 0x81, 0x07, 0x00, 0x00, 0xC5 };
+DeviceAddress Probe06 = { 0x28, 0xBE, 0x45, 0x73, 0x07, 0x00, 0x00, 0x6B };
+DeviceAddress Probe07 = { 0x28, 0xAB, 0x5C, 0x73, 0x07, 0x00, 0x00, 0x54 };
+DeviceAddress Probe08 = { 0x28, 0xCA, 0x68, 0x74, 0x07, 0x00, 0x00, 0xBD };
+DeviceAddress Probe09 = { 0x28, 0xAA, 0xE3, 0x72, 0x07, 0x00, 0x00, 0xCC };
+DeviceAddress Probe10 = { 0x28, 0xBA, 0x50, 0x73, 0x07, 0x00, 0x00, 0x19 };
+DeviceAddress Probe11 = { 0x28, 0x81, 0x7F, 0x73, 0x07, 0x00, 0x00, 0x9B };
+DeviceAddress Probe12 = { 0x28, 0x38, 0xD3, 0x73, 0x07, 0x00, 0x00, 0x18 };
+DeviceAddress Probe13 = { 0x28, 0x3F, 0xD2, 0x73, 0x07, 0x00, 0x00, 0x50 };
+DeviceAddress Probe14 = { 0x28, 0xE2, 0x67, 0x74, 0x07, 0x00, 0x00, 0xC5 };
+DeviceAddress Probe15 = { 0x28, 0xE0, 0xF2, 0x73, 0x07, 0x00, 0x00, 0x48 };
+DeviceAddress Probe16 = { 0x28, 0x55, 0x48, 0x74, 0x07, 0x00, 0x00, 0xD0 };
+DeviceAddress Probe17 = { 0x28, 0x0A, 0x99, 0x72, 0x07, 0x00, 0x00, 0x40 };
+DeviceAddress Probe18 = { 0x28, 0x89, 0xE6, 0x73, 0x07, 0x00, 0x00, 0x7E };
+DeviceAddress Probe19 = { 0x28, 0xBA, 0x6B, 0x74, 0x07, 0x00, 0x00, 0x6B };
+DeviceAddress Probe20 = { 0x28, 0x40, 0xB1, 0x73, 0x07, 0x00, 0x00, 0xB3 };
 
 
 float V1, V2, I, P, tempC[20]; //data after conversion and calculations
@@ -77,6 +90,19 @@ void setup() {
   temp_sensors.setResolution(Probe05, temp_res);
   temp_sensors.setResolution(Probe06, temp_res);
   temp_sensors.setResolution(Probe07, temp_res);
+  temp_sensors.setResolution(Probe08, temp_res);
+  temp_sensors.setResolution(Probe09, temp_res);
+  temp_sensors.setResolution(Probe10, temp_res);
+  temp_sensors.setResolution(Probe11, temp_res);
+  temp_sensors.setResolution(Probe12, temp_res);
+  temp_sensors.setResolution(Probe13, temp_res);
+  temp_sensors.setResolution(Probe14, temp_res);
+  temp_sensors.setResolution(Probe15, temp_res);
+  temp_sensors.setResolution(Probe16, temp_res);
+  temp_sensors.setResolution(Probe17, temp_res);
+  temp_sensors.setResolution(Probe18, temp_res);
+  temp_sensors.setResolution(Probe19, temp_res);
+  temp_sensors.setResolution(Probe20, temp_res);
 
 
 
@@ -125,7 +151,7 @@ void loop() {
   P = V1 * I;
 
   // TEMPERATURE MEASUREMENTS
-  delay(180); //wait for the temperature sensors' conversion (11bits waiting is 375ms - 190ms electrical measurements)
+  delay(100); //wait for the temperature sensors' conversion (11bits waiting is 375ms - 190ms electrical measurements)
   
   tempC[0] = temp_sensors.printTemperature(Probe01);
   tempC[1] = temp_sensors.printTemperature(Probe02);
@@ -134,22 +160,21 @@ void loop() {
   tempC[4] = temp_sensors.printTemperature(Probe05);
   tempC[5] = temp_sensors.printTemperature(Probe06);
   tempC[6] = temp_sensors.printTemperature(Probe07);
+  tempC[7] = temp_sensors.printTemperature(Probe08);
+  tempC[8] = temp_sensors.printTemperature(Probe09);
+  tempC[9] = temp_sensors.printTemperature(Probe10);
+  tempC[10] = temp_sensors.printTemperature(Probe11);
+  tempC[11] = temp_sensors.printTemperature(Probe12);
+  tempC[12] = temp_sensors.printTemperature(Probe13);
+  tempC[13] = temp_sensors.printTemperature(Probe14);
+  tempC[14] = temp_sensors.printTemperature(Probe15);
+  tempC[15] = temp_sensors.printTemperature(Probe16);
+  tempC[16] = temp_sensors.printTemperature(Probe17);
+  tempC[17] = temp_sensors.printTemperature(Probe18);
+  tempC[18] = temp_sensors.printTemperature(Probe19);
+  tempC[19] = temp_sensors.printTemperature(Probe20);
 
-  tempC[7] = 8.13; //just dummy values xx.13 because I dont have the sensors 8-20 yet
-  tempC[8] = 9.13;
-  tempC[9] = 10.13;
-  tempC[10] = 11.13;
-  tempC[11] = 12.13;
-  tempC[12] = 13.13;
-  tempC[13] = 14.13;
-  tempC[14] = 15.13;
-  tempC[15] = 16.13;
-  tempC[16] = 17.13;
-  tempC[17] = 18.13;
-  tempC[18] = 19.13;
-  tempC[19] = 20.13;
-
-  delay(220); //simulate the time reading sensors 8-20
+  //delay(220); //simulate the time reading sensors 8-20
 
   // DATASTRING FILLING
   dataString1.concat(rtc.ReadTimeDate());
@@ -209,12 +234,12 @@ void loop() {
   dataString6.concat("e");
 
   
-  /*Serial.println(dataString1);
+  Serial.println(dataString1);
   Serial.println(dataString2);
   Serial.println(dataString3);
   Serial.println(dataString4);
   Serial.println(dataString5);
-  Serial.println(dataString6);*/
+  Serial.println(dataString6);
 
   //Datastrings ready to be transfered to master
   digitalWrite(DATA_READY_PIN, LOW); //falling edge trigger interrupt
@@ -223,11 +248,11 @@ void loop() {
 
   //FREE TIME: here we are just waiting for the second to be completed
 
-  waitforRTC(); //Waiting for the 1Hz pulse to arrive
+/*  waitforRTC(); //Waiting for the 1Hz pulse to arrive
   noInterrupts();
   RTC_state = HIGH; //restoring the volatile interrupt flag
   interrupts();
-
+*/
   //Get end time
   unsigned long CurrentTime = millis();
   unsigned long ElapsedTime = CurrentTime - StartTime;
