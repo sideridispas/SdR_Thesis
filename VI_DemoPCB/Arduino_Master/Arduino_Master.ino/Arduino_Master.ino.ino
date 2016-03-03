@@ -1,11 +1,14 @@
 //i2c Master(UNO)
 #include <SD.h>
 #include <Wire.h>
+#include <SoftwareSerial.h>
+
+
 
 #define DATA_INT 3 //interrupt pin for slave data
 #define SD_CS 10 //SD Card module Chip select
 volatile int data_ready = HIGH; //interrupt flag for data ready from slave
-
+SoftwareSerial xbee(5, 6); // RX, TX
 String p1,p2,p3,p4,p5,p6;
 
 
@@ -13,7 +16,8 @@ void setup()
 {
   Wire.begin();
   Serial.begin(9600);
-
+  xbee.begin(115200);
+  
   //set up interrupt for data ready waiting from slave
   attachInterrupt(digitalPinToInterrupt(DATA_INT), Data_Interrupt, FALLING);
   
@@ -43,7 +47,7 @@ void setup()
   Serial.println("System Ready");
 
   //Writing the column titles
-  File dataFile = SD.open("data1.csv", FILE_WRITE);
+  File dataFile = SD.open("data3.csv", FILE_WRITE);
   dataFile.print("Date,Time,I,V1,V2,P");
   for (int i=1;i<21;i++){
         dataFile.print(",temp");
@@ -64,7 +68,7 @@ void loop()
 
   unsigned long StartTime = millis();  //Get starting time
 
-  File dataFile = SD.open("data2.csv", FILE_WRITE);
+  File dataFile = SD.open("data3.csv", FILE_WRITE);
   // if the file is available, write to it:
   if (dataFile) {
     p1 = getPacket(1);
@@ -112,6 +116,13 @@ void loop()
     Serial.println(p4);
     Serial.println(p5);
     Serial.println(p6);
+
+    xbee.println(p1);
+    xbee.println(p2);
+    xbee.println(p3);
+    xbee.println(p4);
+    xbee.println(p5);
+    xbee.println(p6);
   }
   // if the file isn't open, pop up an error:
   else {

@@ -1,8 +1,11 @@
 //i2c Master(UNO)
 #include <SD.h>
 #include <Wire.h>
+#include <SoftwareSerial.h>
 
 #define SD_CS 10 //SD Card module Chip select
+
+SoftwareSerial xbee(5, 6); // RX, TX
 
 String a = "";
 char temp;
@@ -10,8 +13,9 @@ char temp;
 void setup()
 {
   Wire.begin();
-  Serial.begin(115200);
-
+  Serial.begin(9600);
+  xbee.begin(115200);
+  
   Serial.print("Initializing SD card...");
   // see if the card is present and can be initialized:
   if (!SD.begin(SD_CS)) {
@@ -44,7 +48,7 @@ void setup()
       if(temp != '\n'){
         a = a + temp;        
       }else{
-        Serial.println(a);
+        xbee.println(a);
         a = "";
       }
     }
