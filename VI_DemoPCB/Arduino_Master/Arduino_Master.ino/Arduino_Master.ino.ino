@@ -3,8 +3,6 @@
 #include <Wire.h>
 #include <SoftwareSerial.h>
 
-
-
 #define DATA_INT 3 //interrupt pin for slave data
 #define SD_CS 10 //SD Card module Chip select
 volatile int data_ready = HIGH; //interrupt flag for data ready from slave
