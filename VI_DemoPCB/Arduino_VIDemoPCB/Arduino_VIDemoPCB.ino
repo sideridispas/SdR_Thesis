@@ -234,16 +234,16 @@ void loop() {
   dataString6.concat("e");
 
   
-/*  Serial.println(dataString1);
+  Serial.println(dataString1);
   Serial.println(dataString2);
   Serial.println(dataString3);
   Serial.println(dataString4);
   Serial.println(dataString5);
-  Serial.println(dataString6);*/
+  Serial.println(dataString6);
 
   //Datastrings ready to be transfered to master
   digitalWrite(DATA_READY_PIN, LOW); //falling edge trigger interrupt
-  delay(10);
+  delay(20);
   digitalWrite(DATA_READY_PIN, HIGH); //restore pin to high
 
   //FREE TIME: here we are just waiting for the second to be completed

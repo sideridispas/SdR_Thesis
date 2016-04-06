@@ -31,10 +31,12 @@ void setup()
   Serial.print("System loading...");
   //throw first 5 datalines in order to get rid of corrupted data
   for(int i=0;i<5;i++){
+    //Serial.println("==Before wait");
     waitforDATA();
     noInterrupts();
     data_ready = HIGH;
     interrupts();
+    //Serial.println("==After wait");
     String temp = getPacket(1);
     temp = getPacket(2);
     temp = getPacket(3);
@@ -45,7 +47,7 @@ void setup()
   Serial.println("System Ready");
 
   //Writing the column titles
-  File dataFile = SD.open("data4.csv", FILE_WRITE);
+  File dataFile = SD.open("alone4.csv", FILE_WRITE);
   dataFile.print("Date,Time,I,V1,V2,P");
   for (int i=1;i<21;i++){
         dataFile.print(",temp");
@@ -66,7 +68,7 @@ void loop()
 
   unsigned long StartTime = millis();  //Get starting time
 
-  File dataFile = SD.open("data4.csv", FILE_WRITE);
+  File dataFile = SD.open("alone4.csv", FILE_WRITE);
   // if the file is available, write to it:
   if (dataFile) {
     p1 = getPacket(1);
