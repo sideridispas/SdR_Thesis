@@ -29,6 +29,7 @@
 #define RTC_CS 8 //Chip select for the DS3234 RTC
 #define RTC_SQW 3 //Pin for the ouput of the Square Wave pulse of RTC (1Hz measuring clocking)
 #define DATA_READY_PIN 6 //Pin for outputting the flag "Data ready" (all datastrings) to be readen by the master arduino
+#define LED_PIN A1 //LED for "working board" indication
 
 /*-----( Declare objects )-----*/
 // Setup a ads12xx object to communicate with the ADS1256 ADC
@@ -119,14 +120,26 @@ void setup() {
 
   pinMode(DATA_READY_PIN,OUTPUT); // "data ready" pin that triggers the interrupt on master side
   digitalWrite(DATA_READY_PIN, HIGH); //initialy the pin is HIGH (inverted logic because of falling edge interrupt)
+
+  pinMode(LED_PIN,OUTPUT); // LED indicator
   
-  delay(100); //wait for system stability
+  for (int i=0;i<5;i++){
+    digitalWrite(LED_PIN, HIGH);
+    delay(100);
+    digitalWrite(LED_PIN, LOW);
+    delay(100);
+  }
+  digitalWrite(LED_PIN, HIGH); //Turn on as start up indicator
+  delay(300);
+  digitalWrite(LED_PIN, LOW); //Turn on as start up indicator
 }
 
 void loop() {
 
   unsigned long StartTime = millis();  //Get starting time
   temp_sensors.requestTemperatures(); //Command all devices on bus to read temperature
+
+  digitalWrite(LED_PIN, HIGH); //Turn on indicator
   
   //clearing the datastrings before storing the new data
   dataString1 = "";
@@ -149,6 +162,8 @@ void loop() {
  
   // POWER CALCULATIONS
   P = V1 * I;
+
+  digitalWrite(LED_PIN, LOW); //Turn off indicator after some "random" time
 
   // TEMPERATURE MEASUREMENTS
   delay(100); //wait for the temperature sensors' conversion (11bits waiting is 375ms - 190ms electrical measurements)
