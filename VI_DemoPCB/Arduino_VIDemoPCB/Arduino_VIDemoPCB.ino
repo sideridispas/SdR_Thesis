@@ -119,7 +119,7 @@ void setup() {
   Wire.onRequest(slavesRespond); //sending back the requested datastring
 
   pinMode(DATA_READY_PIN,OUTPUT); // "data ready" pin that triggers the interrupt on master side
-  digitalWrite(DATA_READY_PIN, HIGH); //initialy the pin is HIGH (inverted logic because of falling edge interrupt)
+  digitalWrite(DATA_READY_PIN, LOW); //initialy the pin is HIGH (inverted logic because of falling edge interrupt)
 
   pinMode(LED_PIN,OUTPUT); // LED indicator
   
@@ -257,9 +257,9 @@ void loop() {
   Serial.println(dataString6);
 
   //Datastrings ready to be transfered to master
-  digitalWrite(DATA_READY_PIN, LOW); //falling edge trigger interrupt
+  digitalWrite(DATA_READY_PIN, HIGH); //falling edge trigger interrupt
   delay(20);
-  digitalWrite(DATA_READY_PIN, HIGH); //restore pin to high
+  digitalWrite(DATA_READY_PIN, LOW); //restore pin to high
 
   //FREE TIME: here we are just waiting for the second to be completed
 
@@ -301,6 +301,7 @@ void slavesRespond(){
         char char_array1[str_len];
         dataString1.toCharArray(char_array1, str_len);
         Wire.write(char_array1);
+        Serial.println("--I2C packet:1");
       break;
   
       case 2:   // Return 2nd packet
