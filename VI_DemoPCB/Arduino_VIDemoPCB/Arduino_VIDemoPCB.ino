@@ -153,17 +153,19 @@ void loop() {
 
   // VOLTAGE 1 MEASUREMENTS
   V1 = ads1256.getCalibratedData(B00100011, 1.4824, -0.0525, 0.999, -0.039); //inputs 2&3, a1=1.4824, b1=-0.0525, a2=0.999, b2=-0.039
+
+  digitalWrite(LED_PIN, LOW); //Turn off indicator after some "random" time
   
   // VOLTAGE 2 MEASUREMENTS
   V2 = ads1256.getCalibratedData(B01000101, 1.5042, -0.1683, 0.9934, -0.0473); //inputs 4&5, a1=1.5042, b1=-0.1683, a2=0.9934, b2=-0.0473
 
   // CURRENT MEASUREMENTS
   I = ads1256.getCalibratedData(B00010000, 4.9424, 0.1816, 0.9994, 0.0205); //inputs 0&1, a1=4.9424, b1=0.1816, a2=0.9994, b2=0.0205
- 
+  
   // POWER CALCULATIONS
   P = V1 * I;
 
-  digitalWrite(LED_PIN, LOW); //Turn off indicator after some "random" time
+  
 
   // TEMPERATURE MEASUREMENTS
   delay(100); //wait for the temperature sensors' conversion (11bits waiting is 375ms - 190ms electrical measurements)
@@ -195,14 +197,18 @@ void loop() {
   dataString1.concat(rtc.ReadTimeDate());
   dataString1.concat(",");
   dataString1 = dataString1 + String(I,4);
-  dataString1.concat("e");
-
+  for (int i=dataString1.length();i<32;i++){
+    dataString1.concat("e");
+  }
+  
   dataString2 = dataString2 + String(V1,4);
   dataString2.concat(",");
   dataString2 = dataString2 + String(V2,4);
   dataString2.concat(",");
   dataString2 = dataString2 + String(P,4);
-  dataString2.concat("e");
+  for (int i=dataString2.length();i<32;i++){
+    dataString1.concat("e");
+  }
 
   dataString3 = dataString3 + String(tempC[0],2);
   dataString3.concat(",");
@@ -213,7 +219,9 @@ void loop() {
   dataString3 = dataString3 + String(tempC[3],2);
   dataString3.concat(",");
   dataString3 = dataString3 + String(tempC[4],2);
-  dataString3.concat("e");
+  for (int i=dataString3.length();i<32;i++){
+    dataString3.concat("e");
+  }
 
   dataString4 = dataString4 + String(tempC[5],2);
   dataString4.concat(",");
@@ -224,7 +232,9 @@ void loop() {
   dataString4 = dataString4 + String(tempC[8],2);
   dataString4.concat(",");
   dataString4 = dataString4 + String(tempC[9],2);
-  dataString4.concat("e");
+  for (int i=dataString4.length();i<32;i++){
+    dataString4.concat("e");
+  }
 
   dataString5 = dataString5 + String(tempC[10],2);
   dataString5.concat(",");
@@ -235,7 +245,9 @@ void loop() {
   dataString5 = dataString5 + String(tempC[13],2);
   dataString5.concat(",");
   dataString5 = dataString5 + String(tempC[14],2);
-  dataString5.concat("e");
+  for (int i=dataString5.length();i<32;i++){
+    dataString5.concat("e");
+  }
 
   dataString6 = dataString6 + String(tempC[15],2);
   dataString6.concat(",");
@@ -246,7 +258,9 @@ void loop() {
   dataString6 = dataString6 + String(tempC[18],2);
   dataString6.concat(",");
   dataString6 = dataString6 + String(tempC[19],2);
-  dataString6.concat("e");
+  for (int i=dataString6.length();i<32;i++){
+    dataString6.concat("e");
+  }
 
   
   Serial.println(dataString1);

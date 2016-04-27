@@ -19,14 +19,14 @@ void setup()
   //set up interrupt for data ready waiting from slave
   attachInterrupt(digitalPinToInterrupt(DATA_INT), Data_Interrupt, FALLING);
   
-  Serial.print("Initializing SD card...");
+  /*Serial.print("Initializing SD card...");
   // see if the card is present and can be initialized:
   if (!SD.begin(SD_CS)) {
     Serial.println("Card failed, or not present");
     // don't do anything more:
     return;
   }
-  Serial.println("card initialized.");
+  Serial.println("card initialized.");*/
 
   Serial.print("System loading...");
   //throw first 5 datalines in order to get rid of corrupted data
@@ -47,14 +47,14 @@ void setup()
   Serial.println("System Ready");
 
   //Writing the column titles
-  File dataFile = SD.open("alone4.csv", FILE_WRITE);
+  /*File dataFile = SD.open("alone4.csv", FILE_WRITE);
   dataFile.print("Date,Time,I,V1,V2,P");
   for (int i=1;i<21;i++){
         dataFile.print(",temp");
         dataFile.print(i);
   }
   dataFile.println();
-  dataFile.close();
+  dataFile.close();*/
   
   delay(100);
 }
@@ -68,9 +68,9 @@ void loop()
 
   unsigned long StartTime = millis();  //Get starting time
 
-  File dataFile = SD.open("alone4.csv", FILE_WRITE);
+  /*File dataFile = SD.open("alone4.csv", FILE_WRITE);
   // if the file is available, write to it:
-  if (dataFile) {
+  if (dataFile) {*/
     p1 = getPacket(1);
     p2 = getPacket(2);
     p3 = getPacket(3);
@@ -91,7 +91,7 @@ void loop()
     p5 = p5.substring(0,p5.indexOf('e'));
     p6 = p6.substring(0,p6.indexOf('e'));
     
-    dataFile.print(p1);
+ /*   dataFile.print(p1);
     dataFile.print(',');
     dataFile.print(p2);
     dataFile.print(',');
@@ -103,7 +103,7 @@ void loop()
     dataFile.print(',');
     dataFile.println(p6);
     dataFile.close();
-
+*/
     CurrentTime = millis();
     ElapsedTime = CurrentTime - StartTime;
     Serial.print(ElapsedTime);
@@ -123,11 +123,11 @@ void loop()
     xbee.println(p4);
     xbee.println(p5);
     xbee.println(p6);
-  }
+/*  }
   // if the file isn't open, pop up an error:
   else {
     Serial.println("error opening file!");
-  }
+  }*/
   delay(500);
 }
 
