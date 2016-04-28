@@ -125,12 +125,12 @@ void setup() {
   
   for (int i=0;i<5;i++){
     digitalWrite(LED_PIN, HIGH);
-    delay(100);
+    delay(50);
     digitalWrite(LED_PIN, LOW);
-    delay(100);
+    delay(50);
   }
   digitalWrite(LED_PIN, HIGH); //Turn on as start up indicator
-  delay(300);
+  delay(400);
   digitalWrite(LED_PIN, LOW); //Turn on as start up indicator
 }
 
@@ -207,7 +207,7 @@ void loop() {
   dataString2.concat(",");
   dataString2 = dataString2 + String(P,4);
   for (int i=dataString2.length();i<32;i++){
-    dataString1.concat("e");
+    dataString2.concat("e");
   }
 
   dataString3 = dataString3 + String(tempC[0],2);
@@ -315,7 +315,7 @@ void slavesRespond(){
         char char_array1[str_len];
         dataString1.toCharArray(char_array1, str_len);
         Wire.write(char_array1);
-        Serial.println("--I2C packet:1");
+        //Serial.println("--I2C packet:1");
       break;
   
       case 2:   // Return 2nd packet
@@ -351,6 +351,9 @@ void slavesRespond(){
         char char_array6[str_len];
         dataString6.toCharArray(char_array6, str_len);
         Wire.write(char_array6);
+        digitalWrite(LED_PIN, HIGH); //Turn on indicator
+        delay(30);
+        digitalWrite(LED_PIN, LOW); //Turn on indicator
       break;
     }
     LastMasterCommand = 0;
