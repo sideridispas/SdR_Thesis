@@ -109,7 +109,7 @@ void setup() {
 
   rtc.RTC_init();//initialize of RTC chip
   //Seting the timestamp [day(1-31), month(1-12), year(0-99), hour(0-23), minute(0-59), second(0-59)]
-  rtc.SetTimeDate(16,2,16,12,29,00); 
+  //rtc.SetTimeDate(1,1,1,00,00,00); 
 
   //interrupt for waiting the 1Hz pulse of RTC
   attachInterrupt(digitalPinToInterrupt(RTC_SQW), RTC_Interrupt, FALLING);
@@ -303,11 +303,19 @@ void receiveCommand(int howMany){
 }
 
 void slavesRespond(){
-    int str_len;
+    int str_len,d,m,y,h,mi,s;
             
     switch(LastMasterCommand){
-      case 0:   // No new command was received
-        //Wire.write("S"); //Stay still
+      case 0:   // Set RTC time and date command
+        Serial.print("\nSetting time... ");
+        d = Wire.read();
+        m = Wire.read();
+        y = Wire.read();
+        h = Wire.read();
+        mi = Wire.read();
+        s = Wire.read();
+        rtc.SetTimeDate(d,m,y,h,mi,s);
+        Serial.println("Time set\n");
       break;
       
       case 1:   // Return 1st packet
@@ -315,7 +323,6 @@ void slavesRespond(){
         char char_array1[str_len];
         dataString1.toCharArray(char_array1, str_len);
         Wire.write(char_array1);
-        //Serial.println("--I2C packet:1");
       break;
   
       case 2:   // Return 2nd packet
@@ -351,6 +358,8 @@ void slavesRespond(){
         char char_array6[str_len];
         dataString6.toCharArray(char_array6, str_len);
         Wire.write(char_array6);
+
+        //Second LED pulse to know that there is I2C communication
         digitalWrite(LED_PIN, HIGH); //Turn on indicator
         delay(30);
         digitalWrite(LED_PIN, LOW); //Turn on indicator
