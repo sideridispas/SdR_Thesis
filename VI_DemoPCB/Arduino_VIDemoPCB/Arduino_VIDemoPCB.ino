@@ -23,7 +23,6 @@
 
 /*-----( Declare Constants and Pin Numbers )-----*/
 #define ONE_WIRE_BUS_PIN 4 //Pin for the 1-wire bus that temp sensors are using for data
-#define ONE_WIRE_BUS_PIN2 5
 #define ADC_CS 7 //Chip select for the ADS1256 ADC
 #define ADC_DRDY 2 //Data Ready pin for the ADS1256 ADC
 #define RTC_CS 8 //Chip select for the DS3234 RTC
@@ -109,7 +108,7 @@ void setup() {
 
   rtc.RTC_init();//initialize of RTC chip
   //Seting the timestamp [day(1-31), month(1-12), year(0-99), hour(0-23), minute(0-59), second(0-59)]
-  //rtc.SetTimeDate(1,1,1,00,00,00); 
+  rtc.SetTimeDate(1,1,1,00,00,00); 
 
   //interrupt for waiting the 1Hz pulse of RTC
   attachInterrupt(digitalPinToInterrupt(RTC_SQW), RTC_Interrupt, FALLING);
@@ -152,15 +151,15 @@ void loop() {
   data_ready = LOW; //clear the "data ready" flag. It will be set when all datastrings are updated with the new data
 
   // VOLTAGE 1 MEASUREMENTS
-  V1 = ads1256.getCalibratedData(B00100011, 1.4824, -0.0525, 0.999, -0.039); //inputs 2&3, a1=1.4824, b1=-0.0525, a2=0.999, b2=-0.039
+  V1 = ads1256.getCalibratedData(B00100011, 1.4824, -0.0525, 0.99562, -0.03168); //inputs 2&3, a1=1.4824, b1=-0.0525, a2=0.999, b2=-0.039
 
   digitalWrite(LED_PIN, LOW); //Turn off indicator after some "random" time
   
   // VOLTAGE 2 MEASUREMENTS
-  V2 = ads1256.getCalibratedData(B01000101, 1.5042, -0.1683, 0.9934, -0.0473); //inputs 4&5, a1=1.5042, b1=-0.1683, a2=0.9934, b2=-0.0473
+  V2 = ads1256.getCalibratedData(B01000101, 1.5042, -0.1683, 1, 0); //inputs 4&5, a1=1.5042, b1=-0.1683, a2=0.9934, b2=-0.0473
 
   // CURRENT MEASUREMENTS
-  I = ads1256.getCalibratedData(B00010000, 4.9424, 0.1816, 0.9994, 0.0205); //inputs 0&1, a1=4.9424, b1=0.1816, a2=0.9994, b2=0.0205
+  I = ads1256.getCalibratedData(B00010000, 4.9424, 0.1816, 1, 0); //inputs 0&1, a1=4.9424, b1=0.1816, a2=0.9994, b2=0.0205
   
   // POWER CALCULATIONS
   P = V1 * I;

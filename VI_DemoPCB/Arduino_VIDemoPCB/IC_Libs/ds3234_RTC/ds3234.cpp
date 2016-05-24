@@ -42,6 +42,8 @@ int ds3234::SetTimeDate(int d, int mo, int y, int h, int mi, int s){
 
 String ds3234::ReadTimeDate(){
   String temp;
+  /*char *FixedLength = (char*)malloc(3); //extra variable to store the data with 2 digits format (leading zeros)
+  FixedLength = "";*/
   int TimeDate [7]; //second,minute,hour,null,day,month,year    
   for(int i=0; i<=6;i++){
     if(i==3)
@@ -76,6 +78,24 @@ String ds3234::ReadTimeDate(){
       TimeDate[i]=a+b*10; 
       }
   }
+  /*sprintf(FixedLength, "%02d", TimeDate[4]);
+  temp.concat(FixedLength);
+  temp.concat("/") ;
+  sprintf(FixedLength, "%02d", TimeDate[5]);
+  temp.concat(FixedLength);
+  temp.concat("/") ;
+  sprintf(FixedLength, "%02d", TimeDate[6]);
+  temp.concat(FixedLength);
+  temp.concat(",") ;
+  sprintf(FixedLength, "%02d", TimeDate[2]);
+  temp.concat(FixedLength);
+  temp.concat(":") ;
+  sprintf(FixedLength, "%02d", TimeDate[1]);
+  temp.concat(FixedLength);
+  temp.concat(":") ;
+  sprintf(FixedLength, "%02d", TimeDate[0]);
+  temp.concat(FixedLength);*/
+  
   temp.concat(TimeDate[4]);
   temp.concat("/") ;
   temp.concat(TimeDate[5]);
