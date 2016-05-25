@@ -1,0 +1,6 @@
+intervals PCB: 20, intervals DMM: 20
+y = 1.00206 x + -0.00147
+
+MSE =
+
+   0.003028850454235

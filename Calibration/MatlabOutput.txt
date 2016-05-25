@@ -1,0 +1,52 @@
+----BEFORE CALIBRATION
+
+p = polyfit(PCBmean(1:end-2),DMMmean(1:end-2),1);
+====================================================
+intervals PCB: 29, intervals DMM: 29
+y = 0.99537 x + -0.02893
+
+MSE =
+
+    0.0107
+	
+
+p = polyfit(DMMmean(1:end-2),PCBmean(1:end-2),1);
+====================================================	
+intervals PCB: 29, intervals DMM: 29
+y = 1.00465 x + 0.02910
+
+MSE =
+
+    0.0107
+	
+	
+-----AFTER CALIBRATION
+
+Try#1
+	p = polyfit(PCBmean(1:end-2),DMMmean(1:end-2),1);
+	used: the 0.99537 x + -0.02893 for calibration
+	===================================================
+	intervals PCB: 22, intervals DMM: 22
+	y = 0.99627 x + -0.12053
+
+	MSE =
+
+		0.0503
+		
+Try#2	
+	p = polyfit(DMMmean(1:end-2),PCBmean(1:end-2),1);
+	used: the 1.00465 x + 0.02910 for calibration
+	===================================================
+	intervals PCB: 25, intervals DMM: 25
+	y = 0.99134 x + 0.07030
+
+	MSE =
+
+		0.0615
+
+	
+	
+	
+	
+	
+	

@@ -151,12 +151,12 @@ void loop() {
   data_ready = LOW; //clear the "data ready" flag. It will be set when all datastrings are updated with the new data
 
   // VOLTAGE 1 MEASUREMENTS
-  V1 = ads1256.getCalibratedData(B00100011, 1.4824, -0.0525, 0.99562, -0.03168); //inputs 2&3, a1=1.4824, b1=-0.0525, a2=0.999, b2=-0.039
+  V1 = ads1256.getCalibratedData(B00100011, 1.5, 0, 0.99503, -0.00741); //inputs 2&3, a1=1.4824, b1=-0.0525, a2=0.999, b2=-0.039
 
   digitalWrite(LED_PIN, LOW); //Turn off indicator after some "random" time
   
   // VOLTAGE 2 MEASUREMENTS
-  V2 = ads1256.getCalibratedData(B01000101, 1.5042, -0.1683, 1, 0); //inputs 4&5, a1=1.5042, b1=-0.1683, a2=0.9934, b2=-0.0473
+  V2 = ads1256.getCalibratedData(B01000101, 1.5, 0, 1.00206, -0.00147); //inputs 4&5, a1=1.5042, b1=-0.1683, a2=0.9934, b2=-0.0473
 
   // CURRENT MEASUREMENTS
   I = ads1256.getCalibratedData(B00010000, 4.9424, 0.1816, 1, 0); //inputs 0&1, a1=4.9424, b1=0.1816, a2=0.9994, b2=0.0205
