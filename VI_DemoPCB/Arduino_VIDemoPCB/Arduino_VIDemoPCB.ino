@@ -159,7 +159,7 @@ void loop() {
   V2 = ads1256.getCalibratedData(B01000101, 1.5, 0, 1.00206, -0.00147); //inputs 4&5, a1=1.5042, b1=-0.1683, a2=0.9934, b2=-0.0473
 
   // CURRENT MEASUREMENTS
-  I = ads1256.getCalibratedData(B00010000, 4.9424, 0.1816, 1, 0); //inputs 0&1, a1=4.9424, b1=0.1816, a2=0.9994, b2=0.0205
+  I = ads1256.getCalibratedData(B00010000, 5, 0, 0.99470, 0.00410); //inputs 0&1, a1=4.9424, b1=0.1816, a2=0.9994, b2=0.0205
   
   // POWER CALCULATIONS
   P = V1 * I;

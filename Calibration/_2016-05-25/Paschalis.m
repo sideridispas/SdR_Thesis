@@ -6,7 +6,7 @@ clc
 % PCB = load('./After/PCB_data.csv');
 % DMM = load('./After/DMM_data.csv');
 
-load('./V2/After/data.mat')
+load('./I/After/data.mat')
 
 DMM = [DMM; NaN(size(PCB,1)-size(DMM,1),1)];
 
@@ -14,8 +14,8 @@ DMM = [DMM; NaN(size(PCB,1)-size(DMM,1),1)];
 %PCB = medfilt1(PCB);
 
 % find the steps for PCB
-a = find(diff(PCB)> 0.2);
-b = find(diff(PCB)< -0.2);
+a = find(diff(PCB)> 0.25);
+b = find(diff(PCB)< -0.25);
 intervals_PCB = [a; b];
 intervals_PCB = sort(intervals_PCB);
 % make sure only the steps are registered and not a small deviation
@@ -23,12 +23,12 @@ a = find(diff(intervals_PCB)>15);
 intervals_PCB = intervals_PCB(a);
 
 % find the steps for DMM
-a = find(diff(DMM)> 0.2);
-b = find(diff(DMM)< -0.2);
+a = find(diff(DMM)> 0.25);
+b = find(diff(DMM)< -0.25);
 intervals_DMM = [a; b];
 intervals_DMM = sort(intervals_DMM);
 % make sure only the steps are registered and not a small deviation
-a = find(diff(intervals_DMM)>12);
+a = find(diff(intervals_DMM)>13);
 intervals_DMM = intervals_DMM(a);
 
 % plot both sets
