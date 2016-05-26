@@ -1,0 +1,6 @@
+intervals PCB: 30, intervals DMM: 30
+y = 0.99987 x + 0.00023
+
+MSE =
+
+   1.8054e-07
