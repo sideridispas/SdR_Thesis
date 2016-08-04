@@ -1,0 +1,15 @@
+\select@language {english}
+\contentsline {chapter}{\numberline {1}Introduction}{2}
+\contentsline {section}{\numberline {1.1}PV in general}{2}
+\contentsline {section}{\numberline {1.2}Important aspects}{2}
+\contentsline {section}{\numberline {1.3}Thesis structure}{2}
+\contentsline {chapter}{\numberline {2}System Description}{3}
+\contentsline {section}{\numberline {2.1}...}{3}
+\contentsline {chapter}{\numberline {3}Measurement PCB}{4}
+\contentsline {section}{\numberline {3.1}...}{4}
+\contentsline {chapter}{\numberline {4}Control and Data}{5}
+\contentsline {section}{\numberline {4.1}...}{5}
+\contentsline {chapter}{\numberline {5}Final Device}{6}
+\contentsline {section}{\numberline {5.1}...}{6}
+\contentsline {chapter}{\numberline {6}Appendix}{7}
+\contentsline {section}{\numberline {6.1}...}{7}
