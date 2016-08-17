@@ -1,0 +1,67 @@
+\documentclass[11pt]{report}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\graphicspath{{images/}}
+\usepackage[a4paper,width=150mm,top=25mm,bottom=25mm]{geometry}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+\renewcommand{\headrulewidth}{0.4pt}
+\fancyhead{}
+\fancyhead[LO,RE]{\leftmark}
+
+\usepackage{biblatex}
+\addbibresource{references.bib}
+
+\title{
+	{Electro-thermal outdoor measurements including temperature for photovoltaic modules}\\
+	{\large Aristotle University of Thessaloniki}\\
+	\vspace{10mm} %10mm vertical space
+	{- UGLY TEST TITLE PAGE HERE -}\\
+	\vspace{10mm} %10mm vertical space
+	{\includegraphics[scale=0.5]{auth_logo.png}}
+}
+
+\author{Paschalis Sideridis}
+\date{August 2016}
+
+\begin{document}
+
+\maketitle
+
+\chapter*{Declaration}
+I declare that I am the chosen one..
+
+\chapter*{Abstract}
+Abstract goes here
+
+\chapter*{Acknowledgements}
+I want to thank my mum,dad friends and enemies..
+
+\tableofcontents
+
+\chapter{Introduction}
+\input{chapters/1.Introduction}
+
+\chapter{System Description}
+\input{chapters/2.SystemDescription}
+
+\chapter{Measurement PCB}
+\input{chapters/3.MeasurementPCB}
+
+\chapter{Control and Data}
+\input{chapters/4.ControlData}
+
+\chapter{Final Device}
+\input{chapters/5.FinalDevice}
+
+\chapter{Conclusion}
+\input{chapters/6.Conclusion}
+
+\appendix
+\chapter{Appendix}
+\input{chapters/7.Appendix}
+
+\printbibliography
+
+\end{document}
