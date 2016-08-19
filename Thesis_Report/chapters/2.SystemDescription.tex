@@ -1,5 +1,4 @@
-Introduction text about the system in general..
-mpla mpla mpla
+In this chapter, we try to describe in a clear but simple way the system and the different parts that form it. We start with the objectives of the whole project and after that we focus more on the systen division.
 
 \section{Project Goals}
 In order to better describe the system and the final device's functionalities, we have to start with a clear definition of this thesis' objectives. The main target of this project is  the design and implementation of a monitoring device that can take electrical measurements from the output of a Photovoltaic (PV) module and also get a few temperature points across the panel.\par
@@ -20,12 +19,24 @@ At this point, some of the above mentioned objectives may seem more abstract tha
 \section{System Description}
  One important aspect that we have to take into consideration when designing the monitoring device is the fact that it should be easily added to an existing and functional set-up of PV modules. Therefore, first step is defining how a default PV module system is structured and find the proper place for the new device. As shown in the figure below, the output of a PV module is usually connected to a DC-DC converter and after that is wired, of course depending on the specific case and area, to a larger energy grid.
  
- -FIGURE(Default PV panel connection to the DC-DC and grid)
+\begin{figure}[htbp]
+	\centering
+		\includegraphics[width=0.6\textwidth]{600x400.png}
+		\rule{35em}{0.5pt}
+	\caption[PV_to_DCDC]{Default PV panel connection to the DC-DC and grid}
+	\label{fig:PV_to_DCDC}
+\end{figure}
  
  It is clear that the place to add the measuring device should be just after the PV module output and before the DC-DC converter. In that way, we can accurately get the electrical measurements of the panel and at the same time minimise the influence of the existing system and keep the majority of the set-up identical. An example of that kind of  installation of the measurement device in an existing PV module system is shown in the figure below.
  
- -FIGURE(the diagram with multiple PVs connected to the A-boxes and then to the DC-DCs and after)
- 
+\begin{figure}[htbp]
+	\centering
+		\includegraphics[width=0.8\textwidth]{600x400.png}
+		\rule{35em}{0.5pt}
+	\caption[PV_to_Aboxes_to_DCDC]{Multiple PVs connected to the A-boxes and then to the DC-DC}
+	\label{fig:PV_to_Aboxes_to_DCDC}
+\end{figure}
+
  In the above diagram we can see that the output of each individual panel is fed to the measuring device and after that directly connected to the DC-DC converter, as before. Also, we can see that each measuring device is capable of wireless communication with an access point and consequently have Internet connection, in order to upload the measured data to the cloud.
  
  As we defined the existing system and the location of the measuring device, we can focus more on the way that this device will operate. There are two main objectives that this instrument should fulfill and if we try to simplify them as much as possible, we can conclude to the following functions:
@@ -37,14 +48,22 @@ At this point, some of the above mentioned objectives may seem more abstract tha
  
 It is clear that each of these two functions includes a lot more specific steps and processes, but this simple system division can help us understand the problem that the measuring device targets to solve. An abstract view of the two parts of the system is given in the figure below.
 
--FIGURE(Measurement and Data part diagram)
+\begin{figure}[htbp]
+	\centering
+		\includegraphics[width=0.8\textwidth]{600x400.png}
+		\rule{35em}{0.5pt}
+	\caption[Measur_Data_parts]{Measurement and Data parts of system}
+	\label{fig:Measur_Data_parts}
+\end{figure}
 
-In the next sections, we will focus more in depth to each individual part of the measuring device, in order to describe the system in general. 
+In the next paragraphs, we will focus a bit more to each individual part of the measuring device, in order to describe the system as a whole.
 
 \subsection{Measurements}
-More information and details about the measurements' part.
-Which are the functionalities of that part of the system?
+In this part of the system, we implement the basic and crucial step of the actual measurement. More specific, we have to design it in order to measure the voltage and current at the output of the PV module. Also, in the same part we have to get the temperature measurement of multiple points on the surface of the PV panel.
+
+Although these measurements seem to be simple and common, their requirements concerning the accuracy and of course the value range of maximum current and voltage classify them as more special. Therefore, because of not common  design goals and special requirements we decided that it was more suitable to target on a brand new PCB board, rather than an already existing product.
 
 \subsection{Data and Control}
-More information and details about the measurements' part.
-Which are the functionalities of that part of the system?
+The second part of the system is responsible for the general control of the device, in terms of timing, syncing and also data handling. That includes the collection of the measured data from the measuring board, the local storing of them and also the uploading on the cloud. Last but not least, in this part of the system we can add the different and extra function that we would like to incorporate to the device, e.g. smart tasks and alerts.
+
+The requirements of this specific part are often found on a lot of projects and system, reducing the need of a custom design. So, as we have more common requirements and the need for easy add-ons, upgrades and extra functions, we decided to search for an existing product that could fulfil these goals.
