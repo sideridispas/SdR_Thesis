@@ -1,0 +1,390 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Masters/Doctoral Thesis 
+% LaTeX Template
+% Version 1.43 (17/5/14)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original authors:
+% Steven Gunn 
+% http://users.ecs.soton.ac.uk/srg/softwaretools/document/templates/
+% and
+% Sunil Patel
+% http://www.sunilpatel.co.uk/thesis-template/
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+% Note:
+% Make sure to edit document variables in the Thesis.cls file
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[11pt, oneside ]{Thesis} % The default font size and one-sided printing (no margin offsets)
+
+\graphicspath{{Images/}} % Specifies the directory where pictures are stored
+
+\usepackage[square, numbers, comma, sort&compress]{natbib} % Use the natbib reference package - read up on this to edit the reference style; if you want text (e.g. Smith et al., 2012) for the in-text references (instead of numbers), remove 'numbers' 
+
+%packages for figures
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+
+% Greek font support
+\usepackage[cm-default]{fontspec}
+\setmainfont{CMU Serif}
+%\usepackage{xgreek} % Greek Hyphenation
+
+% New type of columns with fixed width and variable height
+\usepackage{array}
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+% Used to reference in multiple sources. .ex \cref{eq2,eq1,eq3,eq5,thm2,def1}
+\usepackage{cleveref}
+
+% For figures that wrap text
+\usepackage{wrapfig}
+
+% To include code snippets
+\usepackage{color}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\usepackage{listings}
+\lstdefinestyle{customc}{
+  belowcaptionskip=1\baselineskip,
+  breaklines=true,
+  numbers=left,
+  numbersep=5pt,                   % how far the line-numbers are from the code
+  numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+  frame=L,
+  xleftmargin=\parindent,
+  language=C,
+  showstringspaces=false,
+  basicstyle=\footnotesize\ttfamily,
+  keywordstyle=\bfseries\color{mygreen},
+  morekeywords={},            % if you want to add more keywords to the set
+  commentstyle=\itshape\color{mymauve},
+  identifierstyle=\color{blue},
+  stringstyle=\color{magenta},
+  tabsize=2
+}
+
+\hypersetup{urlcolor=black, colorlinks=true, linkcolor=black} % Colors hyperlinks in blue - change to black if annoying
+\title{\ttitle} % Defines the thesis title - don't touch this
+
+\begin{document}
+
+\frontmatter % Use roman page numbering style (i, ii, iii, iv...) for the pre-content pages
+
+\setstretch{1.3} % Line spacing of 1.3
+
+% Define the page headers using the FancyHdr package and set up for one-sided printing
+\fancyhead{} % Clears all page headers and footers
+\rhead{\thepage} % Sets the right side header to show the page number
+\lhead{} % Clears the left side page header
+
+\pagestyle{fancy} % Finally, use the "fancy" page style to implement the FancyHdr headers
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % New command to make the lines in the title page
+
+% PDF meta-data
+\hypersetup{pdftitle={\ttitle}}
+\hypersetup{pdfsubject=\subjectname}
+\hypersetup{pdfauthor=\authornames}
+\hypersetup{pdfkeywords=\keywordnames}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\begin{titlepage}
+\begin{center}
+
+\textsc{\LARGE \univname}\\[0.5cm] % University name
+\includegraphics[width=0.2\textwidth]{Images/auth_logo_color}\\[1.5cm] % University/department logo - uncomment to place it
+\textsc{\Large Diploma Thesis}\\[0.5cm] % Thesis type
+
+\HRule \\[0.4cm] % Horizontal line
+{\huge \bfseries \ttitle}\\[0.4cm] % Thesis title
+\HRule \\[1.5cm] % Horizontal line
+ 
+\begin{minipage}{0.45\textwidth}
+\begin{flushleft} \large
+\emph{Author:}\\
+\href{}{\authornames} % Author name - remove the \href bracket to remove the link
+\end{flushleft}
+\end{minipage}
+\begin{minipage}{0.45\textwidth}
+\begin{flushright} \large
+\emph{Supervisors:} \\
+\href{}{\supname} % Supervisor name - remove the \href bracket to remove the link  
+\end{flushright}
+\end{minipage}\\[3cm]
+ 
+\large \textit{A thesis submitted in fulfillment of the requirements\\ for the degree of \degreename}\\[0.3cm] % University requirement text
+\textit{in the}\\[0.4cm]
+\groupname\\\deptname\\[2cm] % Research group name and department name
+ 
+{\large \today}\\[4cm] % Date
+ 
+\vfill
+\end{center}
+
+\end{titlepage}
+
+%----------------------------------------------------------------------------------------
+%	DECLARATION PAGE
+%	Your institution may give you a different text to place here
+%----------------------------------------------------------------------------------------
+
+\Declaration{
+
+\addtocontents{toc}{\vspace{1em}} % Add a gap in the Contents, for aesthetics
+
+I, \authornames, declare that this thesis titled, '\ttitle' and the work presented in it are my own. I confirm that:
+
+\begin{itemize} 
+\item[\tiny{$\blacksquare$}] This work was done wholly or mainly while in candidature for a research degree at this University.
+\item[\tiny{$\blacksquare$}] Where any part of this thesis has previously been submitted for a degree or any other qualification at this University or any other institution, this has been clearly stated.
+\item[\tiny{$\blacksquare$}] Where I have consulted the published work of others, this is always clearly attributed.
+\item[\tiny{$\blacksquare$}] Where I have quoted from the work of others, the source is always given. With the exception of such quotations, this thesis is entirely my own work.
+\item[\tiny{$\blacksquare$}] I have acknowledged all main sources of help.
+\item[\tiny{$\blacksquare$}] Where the thesis is based on work done by myself jointly with others, I have made clear exactly what was done by others and what I have contributed myself.\\
+\end{itemize}
+ 
+Signed:\\
+\rule[1em]{25em}{0.5pt} % This prints a line for the signature
+ 
+Date:\\
+\rule[1em]{25em}{0.5pt} % This prints a line to write the date
+}
+
+\clearpage % Start a new page
+
+%----------------------------------------------------------------------------------------
+%	QUOTATION PAGE
+%----------------------------------------------------------------------------------------
+
+\pagestyle{empty} % No headers or footers for the following pages
+
+\null\vfill % Add some space to move the quote down the page a bit
+
+\textit{\textquotedblleft It is paradoxical, yet true, to say, that the more we know, the more ignorant we become in the absolute sense, for it is only through enlightenment that we become conscious of our limitations. Precisely one of the most gratifying results of intellectual evolution is the continuous opening up of new and greater prospects.\textquotedblright}
+
+\begin{flushright}
+Nikola Tesla
+\end{flushright}
+
+\vfill\vfill\vfill\vfill\vfill\vfill\null % Add some space at the bottom to position the quote just right
+
+\clearpage % Start a new page
+
+%----------------------------------------------------------------------------------------
+%	ABSTRACT PAGE
+%----------------------------------------------------------------------------------------
+
+\addtotoc{Abstract} % Add the "Abstract" page entry to the Contents
+
+\abstract{\addtocontents{toc}{\vspace{1em}} % Add a gap in the Contents, for aesthetics
+
+Solar Energy is the biggest source of energy on our Planet. It is the fastest-growing source of renewable energy generation, increasing by 7.5\% per year from 2012 to 2040, almost exclusively as a result of advances in photovoltaics. Though common materials used for photovoltaics are inorganic, there has been a tremendous effort to develop organic solar cells within the last four decades. In order to reduce the cost of photovoltaics, intensive research has been conducted towards the development of low-cost PV technologies. Of these, organic photovoltaic (OPV) devices are one of the most promising.
+
+Due to the non-linear I-V relation in all photovoltaics, there is a unique point where its power generation maximizes, which is called Maximum Power Point (MPP). Any change in the environment that moves the MPP must initiate a mechanism that somehow finds it and adjusts some circuitry to move to the new optimum operation point. Such technique is very common in photovoltaic systems and is called Maximum Power Point Tracking (MPPT).
+
+This thesis’ objective is to design and implement a maximum power point tracker for an organic solar panel and demonstrate its operation with an application. Taking into consideration the lower power capabilities of the organic solar panels, three energy harvesting integrated circuits were chosen, which include maximum power point tracking and battery charging algorithms.
+
+In order to demonstrate the operation and the performance of the organic solar panel, as well as the MPPT technique, an application was designed using a measurement circuit, an ATxmega384C3 micro-controller by Atmel and a low power memory LCD by Sharp Microelectronics. The measurement circuit reads the voltage and the current supply of the input panel continuously. These measurements are sent to the micro-controller, which displays to the LCD graphs of power, voltage and current supply.
+
+}
+
+\clearpage % Start a new page
+
+%----------------------------------------------------------------------------------------
+%	ACKNOWLEDGEMENTS
+%----------------------------------------------------------------------------------------
+
+\setstretch{1.3} % Reset the line-spacing to 1.3 for body text (if it has changed)
+
+\acknowledgements{\addtocontents{toc}{\vspace{1em}} % Add a gap in the Contents, for aesthetics
+
+First, I would like to express my gratitude to my IMEC supervisor, Dr. Robert Gehlhaar, for his valuable time and guidance throughout the whole project.
+I would also like to thank my supervisor at A.U.Th., Dr. Alkiviadis A. Hatzopoulos for his wise inputs and feedback.
+
+Additionally, I am thankful for everyone at IMEC for creating a great working environment and offering me a warm welcome. I am especially grateful to Dr. Tom Aernouts, Dr. David Cheyns, Dr. Luca La Notte, Mateusz Marchel and João Pedro Bastos. Myrsini A. Manney Kalogera offered her help with the text, and I would like to thank her as well. 
+
+Finally, I am extremely grateful for my family and especially my parents,  whose support has made this  project as well as the entirety of my studies possible.
+
+}
+\clearpage % Start a new page
+
+%----------------------------------------------------------------------------------------
+%	LIST OF CONTENTS/FIGURES/TABLES PAGES
+%----------------------------------------------------------------------------------------
+
+\pagestyle{fancy} % The page style headers have been "empty" all this time, now use the "fancy" headers as defined before to bring them back
+
+\lhead{\emph{Contents}} % Set the left side page header to "Contents"
+\tableofcontents % Write out the Table of Contents
+
+\lhead{\emph{List of Figures}} % Set the left side page header to "List of Figures"
+\listoffigures % Write out the List of Figures
+
+\lhead{\emph{List of Tables}} % Set the left side page header to "List of Tables"
+\listoftables % Write out the List of Tables
+
+%----------------------------------------------------------------------------------------
+%	ABBREVIATIONS
+%----------------------------------------------------------------------------------------
+
+\clearpage % Start a new page
+
+\setstretch{1.5} % Set the line spacing to 1.5, this makes the following tables easier to read
+
+\lhead{\emph{Abbreviations}} % Set the left side page header to "Abbreviations"
+\listofsymbols{ll} % Include a list of Abbreviations (a table of two columns)
+{
+\textbf{OECD}   & \textbf{O}rganization (for) \textbf{E}conomic \textbf{C}ooperation (and) \textbf{D}evelopment \\
+\textbf{EIA}    &   (U.S.) \textbf{E}nergy \textbf{I}nformation \textbf{A}dministration \\
+\textbf{MPP}    &   \textbf{M}aximum \textbf{P}ower \textbf{P}oint \\
+\textbf{MPPT}   &   \textbf{M}aximum \textbf{P}ower \textbf{P}oint \textbf{T}racker \\
+\textbf{PV}     &   \textbf{P}hoto\textbf{v}oltaic  \\
+\textbf{SC}     &   \textbf{S}hort \textbf{C}ircuit \\
+\textbf{OC}     &   \textbf{O}pen \textbf{C}ircuit  \\
+\textbf{OPV}    &   \textbf{O}rganic \textbf{P}hoto\textbf{v}oltaic \\
+\textbf{Si}     &   \textbf{Si}licon    \\
+\textbf{IC}     &   \textbf{I}ntegrated \textbf{C}ircuit    \\
+\textbf{LCD}    &   \textbf{L}iquid \textbf{C}rystal \textbf{D}isplay   \\
+\textbf{MLCD}   &   \textbf{M}emory \textbf{L}iquid \textbf{C}rystal \textbf{D}isplay   \\
+\textbf{FF}     &   \textbf{F}ill \textbf{F}actor   \\
+\textbf{DC}     &   \textbf{D}irect \textbf{C}urrent    \\
+\textbf{AC}     &   \textbf{A}lternating \textbf{C}urrent   \\
+\textbf{PWM}    &   \textbf{P}ulse \textbf{W}idth \textbf{M}odulation   \\
+\textbf{MOSFET} &   \textbf{M}etal-\textbf{O}xide-\textbf{S}emiconductor \textbf{F}ield-\textbf{E}ffect \textbf{T}ransistor  \\
+\textbf{NTC}    &   \textbf{N}egative \textbf{T}emperature \textbf{C}oefficient   \\
+\textbf{PCB}    &   \textbf{P}rinted \textbf{C}ircuit \textbf{B}oard    \\
+\textbf{SMD}    &   \textbf{S}urface-\textbf{M}ount \textbf{D}evice \\
+\textbf{SPI}    &   \textbf{S}erial \textbf{P}eripheral \textbf{I}nterface  \\
+\textbf{CPU}    &   \textbf{C}entral \textbf{P}rocessing \textbf{U}nit  \\
+\textbf{USB}    &   \textbf{U}niversal \textbf{S}erial \textbf{B}us \\
+\textbf{A/D}    &   \textbf{A}nalog (to) \textbf{D}igital   \\
+\textbf{RAM}    &   \textbf{R}andom \textbf{A}ccess \textbf{M}emory \\
+}
+
+%----------------------------------------------------------------------------------------
+%	PHYSICAL CONSTANTS/OTHER DEFINITIONS
+%----------------------------------------------------------------------------------------
+
+\clearpage % Start a new page
+
+\lhead{\emph{Physical Constants}} % Set the left side page header to "Physical Constants"
+
+\listofconstants{lrcl} % Include a list of Physical Constants (a four column table)
+{
+Elementary Electric Charge & $q$ & $=$ & $1.602\times10^{-19}\ \mbox{Coulomb}$  \\
+Electron-Volt       &   $eV$  & $=$     & $1.602176565\times10^{−19}\ \mbox{J}$ \\
+Boltzmann constant & $k$ & $=$ & $8.617\times10^{-5}\ \mbox{eV}\ \mbox{K}^{-1}$ \\
+% Constant Name & Symbol & = & Constant Value (with units) \\
+}
+
+%----------------------------------------------------------------------------------------
+%	SYMBOLS
+%----------------------------------------------------------------------------------------
+
+\clearpage % Start a new page
+
+\lhead{\emph{Symbols}} % Set the left side page header to "Symbols"
+
+\listofnomenclature{lll} % Include a list of Symbols (a three column table)
+{
+$f$  &  frequency       &   Herz (Hz)    \\
+$P$ & power & Watt (Js$^{-1}$) \\
+$V$  & voltage      & Volt (V)    \\
+$I$  & current      & Amper (A)      \\
+$R$  & resistance      &    Ohm (\Omega)   \\
+$L$  & inductance      &    Henry (H)   \\
+$C$  & capacitance      & Farad (F)      \\
+$T$  & temperature in degrees Celcius     & ${}^oC$      \\
+$K$  & temperature in Kelvin      & K      \\
+$J$  & current density      &  $mA/cm^2$     \\
+$Wh$  & watt-hour      &    $Watt\times hour$   \\
+% Symbol & Name & Unit \\
+
+& & \\ % Gap to separate the Roman symbols from the Greek
+
+$\lambda$  & wavelength       & Meters      \\
+$\eta$  & efficiency      &       \\
+% Symbol & Name & Unit \\
+}
+
+%----------------------------------------------------------------------------------------
+%	DEDICATION
+%----------------------------------------------------------------------------------------
+
+% \setstretch{1.3} % Return the line spacing back to 1.3
+
+% \pagestyle{empty} % Page style needs to be empty for this page
+
+% \dedicatory{For/Dedicated to/To my\ldots} % Dedication text
+
+% \addtocontents{toc}{\vspace{2em}} % Add a gap in the Contents, for aesthetics
+
+%----------------------------------------------------------------------------------------
+%	THESIS CONTENT - CHAPTERS
+%----------------------------------------------------------------------------------------
+
+\mainmatter % Begin numeric (1,2,3...) page numbering
+
+\pagestyle{fancy} % Return the page headers back to the "fancy" style
+
+% Include the chapters of the thesis as separate files from the Chapters folder
+% Uncomment the lines as you write the chapters
+
+\input{Chapters/Chapter1_Intro}
+\input{Chapters/Chapter2_MPPT} 
+\input{Chapters/Chapter3_Design}
+\input{Chapters/Chapter4_Application} 
+\input{Chapters/Chapter5_Conclusion} 
+% \input{Chapters/ChapterExample} 
+%\input{Chapters/Chapter7} 
+
+%----------------------------------------------------------------------------------------
+%	THESIS CONTENT - APPENDICES
+%----------------------------------------------------------------------------------------
+
+\addtocontents{toc}{\vspace{2em}} % Add a gap in the Contents, for aesthetics
+
+\appendix % Cue to tell LaTeX that the following 'chapters' are Appendices
+
+% Include the appendices of the thesis as separate files from the Appendices folder
+% Uncomment the lines as you write the Appendices
+
+\input{Appendices/AppendixA}
+\input{Appendices/AppendixB}
+\input{Appendices/AppendixC}
+
+\addtocontents{toc}{\vspace{2em}} % Add a gap in the Contents, for aesthetics
+
+\backmatter
+
+%----------------------------------------------------------------------------------------
+%	BIBLIOGRAPHY
+%----------------------------------------------------------------------------------------
+
+\label{Bibliography}
+
+\lhead{\emph{Bibliography}} % Change the page header to say "Bibliography"
+
+\bibliographystyle{unsrtnat} % Use the "unsrtnat" BibTeX style for formatting the Bibliography
+
+\bibliography{Bibliography} % The references (bibliography) information are stored in the file named "Bibliography.bib"
+
+\end{document}
