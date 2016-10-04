@@ -1,14 +1,14 @@
-In this chapter, we try to describe in a clear but simple way the system and the different parts that form it. We start with the objectives of the whole project and after that we focus more on the systen division.
+In this chapter, we try to describe in a clear but simple way the system and the different parts that form it. We start with the objectives of the whole project and after that we focus more on the system division.
 
 \section{Project Goals}
-In order to better describe the system and the final device's functionalities, we have to start with a clear definition of this thesis' objectives. The main target of this project is  the design and implementation of a monitoring device that can take electrical measurements from the output of a Photovoltaic (PV) module and also get a few temperature points across the panel.\par
+In order to better describe the system and the final device's functionalities, we have to start with a clear definition of this thesis' objectives. The main target of this project is the design and implementation of a monitoring device that can take electrical measurements from the output of a Photovoltaic (PV) module and also get a few temperature points across the panel.\par
 More specific, this thesis' final completed device will have to fulfil the following goals:
 
 \begin{itemize}
   \item Accurate measurement of both Voltage and Current, on the output of each PV module
   \item Temperature measurement with up to 20 sensing points, to distribute across the surfaces of the module
   \item One measurement point per second, containing all above mentioned data
-  \item Minimum influence of the existing system
+  \item Minimum influence on the existing system
   \item Final data collection system based on wireless communication
   \item Portable and easy to set-up device
   \item Full weather resistant packaging
@@ -64,6 +64,6 @@ In this part of the system, we implement the basic and crucial step of the actua
 Although these measurements seem to be simple and common, their requirements concerning the accuracy and of course the value range of maximum current and voltage classify them as more special. Therefore, because of not common  design goals and special requirements we decided that it was more suitable to target on a brand new PCB board, rather than an already existing product.
 
 \subsection{Data and Control}
-The second part of the system is responsible for the general control of the device, in terms of timing, syncing and also data handling. That includes the collection of the measured data from the measuring board, the local storing of them and also the uploading on the cloud. Last but not least, in this part of the system we can add the different and extra function that we would like to incorporate to the device, e.g. smart tasks and alerts.
+The second part of the system is responsible for the general control of the device, in terms of timing, syncing and also data handling. That includes the collection of the measured data from the measuring board, the local storing of them and also the cloud upload. Last but not least, in this part of the system we could add any different and extra function we would like to incorporate to the device, e.g. smart tasks, alerts etc.
 
-The requirements of this specific part are often found on a lot of projects and system, reducing the need of a custom design. So, as we have more common requirements and the need for easy add-ons, upgrades and extra functions, we decided to search for an existing product that could fulfil these goals.
+The requirements of this specific part are often found on a lot of projects and system, reducing the need of a custom design. So, as we have more common requirements and the need for easy add-ons, upgrades and extra functions, we decided to search for an existing product that could fulfil these goals, saving us more development time.
