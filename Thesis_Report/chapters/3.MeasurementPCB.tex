@@ -52,7 +52,24 @@ To summarize the above information, the available options for the current and vo
 
 For this reason, the chosen solution is the use of an external ADC IC, which fulfills all technical requirements, concerning uncertainty and timing. The used IC is the ADS1256 24-bit, very low noise Analog-to-Digital converter from Texas Instruments. The gain error is less than 0.05\% and the range of measurement can be as low as $\pm 78.125$mV which means less effect on the line. Among other benefits of that IC are the serial communication protocols supported, which will make the integration of the board to the system easier and the 4 available input channels, which means that we can measure current and voltage using only one chip. An image of the ADC IC among with a specification table are given below.\\
 
---IMAGE OF ADS1256\\
+\begin{figure}[htbp]
+	\centering
+	\begin{subfigure}[b]{.4\textwidth}
+		\includegraphics[width=\textwidth]{Chapter_3/ADS1256_chip.jpg}
+	    \caption[]{IC}
+	    \label{fig:ADS1256_chip}
+	\end{subfigure}
+    ~
+	\begin{subfigure}[b]{.4\textwidth}
+		\includegraphics[width=\textwidth]{Chapter_3/ADS1256_pinout.PNG}
+	    \caption[]{Pinout}
+	    \label{fig:ADS1256_pinout}
+	\end{subfigure}
+	\rule{35em}{0.5pt}
+	\caption{ADS1256 Analog to Digital Converter}
+	\label{fig:ADS1256}
+\end{figure}
+
 
 --TABLE OF SPECS ADS1256\\
 
@@ -92,7 +109,13 @@ Taking all the above parameters into consideration and after searching the avail
 
 Arduino is an open-source platform used for building electronics projects and combines the physical programmable development board option with a complete IDE, used to write and upload code to the microcontroller. There are plenty different models of Arduino boards, using different microcontrollers and components depending on the board's target area. The most suitable board for this project, capable of simple and fast prototyping, is called Arduino Uno and is based on the microcontroller Atmega328 of AVR series, from the company Atmel.\\
 
---IMAGE OF ARDUINO UNO\\
+\begin{figure}[htbp]
+	\centering
+		\includegraphics[width=0.7\textwidth]{Chapter_3/arduinoUno.jpg}
+		\rule{35em}{0.5pt}
+	\caption{Arduino Uno board}
+	\label{fig:arduinoUno}
+\end{figure}
 
 So far, we have mentioned a wide spectrum of microcontroller solutions; so what makes the Arduino option so special? To answer that question, we have collected the main advantages of the Arduino platform in the following list:
 
@@ -108,7 +131,23 @@ So far, we have mentioned a wide spectrum of microcontroller solutions; so what 
 
 At this point it would be crucial to clarify the following. Although Arduino boards are perfect for prototyping and development, they cannot be considered acceptable as a final option, at least for this project objectives. Their size and cost is a serious problem because we are designing a product with specific needs, which require permanent and size respecting solutions, thus no flexible development board are suitable. The way to keep all the advantages of Arduino but still achieve the goals of size and cost is by using the Arduino for prototyping and when designing the final board only use the atmega microcontroller as standalone IC. With a few accompanying components for the microprocessor's circuitry, it can support all the functions of a complete Arduino board, while enormously reducing the board's size and parts' list.\\
 
---IMAGE of atmega328 small smd package\\
+\begin{figure}[htbp]
+	\centering
+	\begin{subfigure}[b]{.4\textwidth}
+		\includegraphics[width=\textwidth]{Chapter_3/atmega_chip.jpg}
+	    \caption[]{IC}
+	    \label{fig:atmega_chip}
+	\end{subfigure}
+    ~
+	\begin{subfigure}[b]{.4\textwidth}
+		\includegraphics[width=\textwidth]{Chapter_3/atmega_pinout.PNG}
+	    \caption[]{Pinout}
+	    \label{fig:atmega_pinout}
+	\end{subfigure}
+	\rule{35em}{0.5pt}
+	\caption{Atmega328 microcontroller}
+	\label{fig:atmega}
+\end{figure}
 
 The most important specifications of the Atmega microcontroller are given in the table below:\\
 
@@ -348,7 +387,23 @@ The available options for temperature measurement were once again plenty, includ
 
 The final solution we chose, after searching the available options in market, was the DS18B20 digital, 1-Wire temperature sensor. The big advantage of that type of sensor is that it requires only one data bus for all the sensors, as noted before, which means that we will only use one pin of the microcontroller to get all 20 temperature measurements. Additionally, the accuracy is inside the required range and the device package (3TO-92) is really convenient for the gluing application on the back side of the PV module.\\
 
---IMAGE OF TEMP SENSOR\\
+\begin{figure}[htbp]
+	\centering
+	\begin{subfigure}[b]{.4\textwidth}
+		\includegraphics[width=\textwidth]{Chapter_3/DS18B20_chip.jpg}
+	    \caption[]{IC}
+	    \label{fig:DS18B20_chip}
+	\end{subfigure}
+    ~
+	\begin{subfigure}[b]{.1\textwidth}
+		\includegraphics[width=\textwidth]{Chapter_3/DS18B20_pinout.PNG}
+	    \caption[]{Pinout}
+	    \label{fig:DS18B20_pinout}
+	\end{subfigure}
+	\rule{35em}{0.5pt}
+	\caption{DS18B20 temperature sensor}
+	\label{fig:DS18B20}
+\end{figure}
 
 The basic specifications of the DS18B20 sensor are given in the table -NUMBER OF TABLE-.\\
 
@@ -375,7 +430,23 @@ The first option, of analog design circuits is not only complex to design but mo
 
 So, the optimal solution seems to be the use of RTC chips, which not only could produce high precision clocking signals but in the same time help the development with useful functions. After searching the market for the available options, we concluded to the DS3234 RTC from Maxim Integrated Products. This IC fully covers all mentioned requirements and even provide extra tools to increase the efficiency of the board, such as timestamp generation, leap year compensation, SPI bus communication and Arduino libraries).\\
 
---IMAGE OF DS3234\\
+\begin{figure}[htbp]
+	\centering
+	\begin{subfigure}[b]{.4\textwidth}
+		\includegraphics[width=\textwidth]{Chapter_3/DS3234_chip.png}
+	    \caption[]{IC}
+	    \label{fig:DS3234_chip}
+	\end{subfigure}
+    ~
+	\begin{subfigure}[b]{.4\textwidth}
+		\includegraphics[width=\textwidth]{Chapter_3/DS3234_pinout.png}
+	    \caption[]{Pinout}
+	    \label{fig:DS3234_pinout}
+	\end{subfigure}
+	\rule{35em}{0.5pt}
+	\caption{DS3234 Real Time Clock}
+	\label{fig:DS3234}
+\end{figure}
 
 The basic specification of the DS3234 real time clock are given in the table -NUMBER OF TABLE-.\\
 
@@ -403,7 +474,23 @@ The Measurement PCB is powered from the control device, with 5V DC power line. I
 
 In this particular design we are using the ADuM5000 2.5 kV, Isolated DC-to-DC Converter from Analog Devices, as shown in the figure -FIGURE NUMBER-.\\
 
---IMAGE OF ADUM IC\\
+\begin{figure}[htbp]
+	\centering
+	\begin{subfigure}[b]{.4\textwidth}
+		\includegraphics[width=\textwidth]{Chapter_3/ADUM5000_chip.jpg}
+	    \caption[]{IC}
+	    \label{fig:ADUM5000_chip}
+	\end{subfigure}
+    ~
+	\begin{subfigure}[b]{.3\textwidth}
+		\includegraphics[width=\textwidth]{Chapter_3/ADUM5000_pinout.PNG}
+	    \caption[]{Pinout}
+	    \label{fig:ADUM5000_pinout}
+	\end{subfigure}
+	\rule{35em}{0.5pt}
+	\caption{ADUM5000 DC-DC isolated converter}
+	\label{fig:ADUM5000}
+\end{figure}
 
 It is often for this kind of converters to get high temperature because of the power switching, so one concern we had about this IC was the heat generation possible issue. But in this particular case, we thoroughly tested the chip when the board was logging data for long periods of time and the temperature levels were completely acceptable.
 
@@ -417,14 +504,30 @@ In addition to the isolated power supply, the board needs to facilitate a commun
 \begin{itemize}
     \item Microcontroller's reset pin
     \item Data ready flag pin
-    \item $I^2C$ bus (NOT MENTIONED BEFORE ???check that???)
+    \item I$^2$C bus (NOT MENTIONED BEFORE ???check that???)
 \end{itemize}
 
 For the signal isolation we searched the available options in the market and concluded that the most suitable option is the MAX14850 six-Channel digital isolator from Maxim Integrated, shown in the figure -FIGURE NUMBER-.\\
 
---IMAGE OF MAX14850\\
+\begin{figure}[htbp]
+	\centering
+	\begin{subfigure}[b]{.3\textwidth}
+		\includegraphics[width=\textwidth]{Chapter_3/MAX14850_chip.jpg}
+	    \caption[]{IC}
+	    \label{fig:MAX14850_chip}
+	\end{subfigure}
+    ~
+	\begin{subfigure}[b]{.3\textwidth}
+		\includegraphics[width=\textwidth]{Chapter_3/MAX14850_pinout.PNG}
+	    \caption[]{Pinout}
+	    \label{fig:MAX14850_pinout}
+	\end{subfigure}
+	\rule{35em}{0.5pt}
+	\caption{MAX14850 6-Channel Digital Isolator}
+	\label{fig:MAX14850}
+\end{figure}
 
-The advantages of MAX14850 isolator are not limited in the capability of single digital signal isolation, but are including two bidirectional open-drain signal paths. This specification means that this channels can be used to isolate communication buses based on common protocols, such as SPI and $I^2C$, which makes the specific chip ideal for our project.
+The advantages of MAX14850 isolator are not limited in the capability of single digital signal isolation, but are including two bidirectional open-drain signal paths. This specification means that this channels can be used to isolate communication buses based on common protocols, such as SPI and I$^2$C, which makes the specific chip ideal for our project.
 
 Furthermore, independent 3.0V to 5.5V supplies on each side of the isolator make it suitable for use as a level translator. As a result, we can use the MAX14850 chip not only as a signal isolator but also as a logic level shifter. Given that key characteristic of the board, we can connect the Measurement PCB, in the control side, with a device based on either of the two logic levels (e.g. an Arduino Uno board runs usually on 5V logic in contrast to an Raspberry Pi board which uses 3.3V).
 
@@ -480,15 +583,43 @@ One more point to mention concerning the schematic of the circuit is the fact th
 
 For the first two voltage levels, there are no strict requirements as they are power supply lines and therefore we can simply use the corresponding Arduino Uno board's pins to directly provide them to the chip. On the other hand, the 2.5V voltage is used for the conversion as voltage reference, meaning it is critical to be precise and stable. For this reason, it is important to use the appropriate kind of IC, called voltage reference, to provide the necessary voltage signal. The chosen reference is the ADR3425 micropower, high accuracy 2.5V voltage reference from Analog Devices, as shown in the figure -FIGURE NUMBER-. This device is capable of generating 2.5V voltage reference with an accuracy of $\pm 0.1\%$, resulting a really small variation of $\pm 2.5mV$.\\
 
---IMAGE OF ADR3425 reference\\
+\begin{figure}[htbp]
+	\centering
+	\begin{subfigure}[b]{.2\textwidth}
+		\includegraphics[width=\textwidth]{Chapter_3/ADR3425_chip.jpg}
+	    \caption[]{IC}
+	    \label{fig:ADR3425_chip}
+	\end{subfigure}
+    ~
+	\begin{subfigure}[b]{.4\textwidth}
+		\includegraphics[width=\textwidth]{Chapter_3/ADR3425_pinout.PNG}
+	    \caption[]{Pinout}
+	    \label{fig:ADR3425_pinout}
+	\end{subfigure}
+	\rule{35em}{0.5pt}
+	\caption{ADR3425 2.5V Precision Voltage Reference}
+	\label{fig:ADR3425}
+\end{figure}
 
 Last component to add to the schematic, is the crystal oscillator which is required from the ADC to accurately clock the conversions. We used a simple 7.68MHz quartz crystal, following the guidance of the datasheet.
 
 At this point we have covered all the components used in the prototype board for the electrical measurements. The complete schematic, as designed in Eagle, is given below split in -FIGURE NUMBER- and -FIGURE NUMBER- for the current path circuit and the ADC circuit respectively, because of it's large size.\\
 
---IMAGE OF BOARD SCHEMATIC - CURRENT PATH\\
+\begin{figure}[p]
+	\centering
+		\includegraphics[width=\textwidth]{Chapter_3/PV_demo_schematic_CP.PNG}
+		\rule{35em}{0.5pt}
+	\caption{Current Path Schematic of demo board}
+	\label{fig:PV_demo_schematic_CP}
+\end{figure}
 
---IMAGE OF BOARD SCHEMATIC - ADC\\
+\begin{figure}[p]
+	\centering
+		\includegraphics[width=\textwidth]{Chapter_3/PV_demo_schematic_ADC.PNG}
+		\rule{35em}{0.5pt}
+	\caption{ADC Schematic of demo board}
+	\label{fig:PV_demo_schematic_ADC}
+\end{figure}
 
 A few points that it would be important to mention are given below:
 
@@ -504,7 +635,21 @@ After locking the schematic of the demo board, we proceed with the design of the
 
 --IMAGE OF PCB LAYOUT\\
 
---IMAGE OF ASSEMBLED DEMO PCB\\
+\begin{figure}[htbp]
+	\centering
+		\includegraphics[width=0.6\textwidth]{Chapter_3/PV_demo_layout.PNG}
+		\rule{35em}{0.5pt}
+	\caption{Physical layout of demo board}
+	\label{fig:PV_demo_layout}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+		\includegraphics[width=0.6\textwidth]{Chapter_3/PV_demoPCB_assembled.jpg}
+		\rule{35em}{0.5pt}
+	\caption{Assembled demo board}
+	\label{fig:PV_demoPCB_assembled}
+\end{figure}
 
 By observing the demo board, one can notice that:
 
@@ -513,7 +658,13 @@ By observing the demo board, one can notice that:
     \item The footprint of the ADC chip is not the original one, because we used an extra "breakout board", as shown in figure -FIGURE NUMBER-. This type of commercial boards are used in case of small SMD ICs' packages and consist of the actual SMD footprint of the IC and copper traces that connect the normal pads with new pins, located further away from the chip. This provides easier soldering of the SMD IC, because of the quality of the board, the soldermask etc and in the same time makes prototyping possible through common breadboard 2.54mm pin spacing.
 \end{itemize} 
 
---IMAGE OF BREAKOUT BOARD\\
+\begin{figure}[htbp]
+	\centering
+		\includegraphics[width=0.5\textwidth]{Chapter_3/Sparkfun_breakout.jpg}
+		\rule{35em}{0.5pt}
+	\caption{Sparkfun Breakout board for the ADS1256}
+	\label{fig:Sparkfun_breakout}
+\end{figure}
 
 As we discussed earlier, there is no microcontroller chip on the board, as we will use the Arduino Uno board for the control and acquisition of the measured data. So at this point, after the assembly and soldering of the board, we had to start testing the new demo board and check if the ADC can provide the measurements as requested. The steps of this prototyping and testing stage are given below:
 
@@ -567,14 +718,27 @@ During this stage, we defined the desired configuration for the sensing through 
 
 After this initial test set-up, four more sensors were added to the circuit using a common breadboard. The code was updated accordingly and after a few failed attempts, we managed to confirm the capability of multiple sensors to operate on the same bus. Next goal was to re-enable the electrical measurements which we had skipped for the first temperature sensing experiments. Both the physical circuit and the code were modified resulting the setup shown in the figure -FIGURE NUMBER-, in which one can notice the demo board, the Arduino and five DS18B20 sensors. One more thing to mention here is the addition of a $4.7k\Omega$ pull-up resistor to the data bus of the 1-Wire bus, as stated in the protocol documentation.\\
 
---IMAGE OF INITIAL PROTOTYPE SETUP (ARDUINO, DEMO PCB, 5xDS18B20 SENSORS)\\
+\begin{figure}[htbp]
+	\centering
+		\includegraphics[width=0.9\textwidth]{Chapter_3/prototype_Elec5Temp.jpg}
+		\rule{35em}{0.5pt}
+	\caption{Initial prototype setup (Arduino, demo PCB, 5xDS18B20)}
+	\label{fig:Sparkfun_breakout}
+\end{figure}
 
 With the previous setup it was possible to experiment with the code and find the most suitable configuration, in terms of register values, for both the ADS1256 converter and the DS18B20 sensors. Adding the 15 more temperature sensors to the breadboard, in order to achieve the initial project's goal  of 20 temperature points in total was rather simple, as we had to follow the same process with the addition of the first 5 sensors. The only question that may arises at this point is what is the required time to get all the measurements, including both the electrical values and all 20 temperatures. To answer this question we need to proceed to the next subject, which is timing.
 
 \subsubsection{Measurement clock}
 As we described in the beginning of this chapter, the solution for all timing and clocking tasks in the board is the use of a RTC and specifically, the IC we chose is the DS3234. This device comes in a compact 20-SO SMD package, which makes the prototyping with the IC nearly impossible without a proper board. For this reason, we used a specific board, which belongs to a wide category of PCBs called modules. These boards usually facilitate a core component, in this case the RTC chip, and accompany the IC with all necessary circuitry and parts such as capacitors, resistors, voltage regulators, buttons, LEDs, connectors etc. In this way it is tremendously easier to prototype, as connections are more accessible even on a common breadboard. The DS3234 RTC module is commercially produced by SparkFun and is shown in the figure -FIGURE NUMBER-.\\
 
---IMAGE OF RTC MODULE\\
+
+\begin{figure}[htbp]
+	\centering
+		\includegraphics[width=0.4\textwidth]{Chapter_3/Sparkfun_RTC.PNG}
+		\rule{35em}{0.5pt}
+	\caption{Sparkfun RTC DS3234 module}
+	\label{fig:Sparkfun_RTC}
+\end{figure}
 
 With the convenience of this board, we can add the RTC to the existing setup and proceed with the clocking implementation. The first experiments were made only with the combination of the Arduino Uno and the RTC module to keep the understanding process simple. After the first successful experiments, we included the module to the measuring setup, once again using the breadboard. The physical setup is shown in the figure -FIGURE NUMBER-.\\
 
@@ -609,7 +773,7 @@ So far we have managed to assemble a functional prototype setup, consisting of t
 
 This means that we created the core of the measuring system. But in order to be confident about the design we need to test the current prototype more and explore its capabilities and potential malfunctions. Consequently we need a second system as the control device, whose main role will be to request the measured data from the measuring system and store them in some kind of storage. As we have not developed this system yet, we can use a similar prototype setup to simulate its main function of requesting the data packets from the measuring part. In the boundaries of prototyping, we used a second Arduino Uno board to play this role of the "control device", featuring only the main task of requesting the data.
 
-There are a few different approaches to achieve communication between digital systems like the ones we have described so far including serial communication, $I^2C$ etc. The protocol we chose for the communication between the two parts of the system is the $I^2C$ because firstly it has more than sufficient data rate but mainly because it uses only the two available $I^2C$ pins for the bus. This is really important because the SPI pins of the atmega, in the measuring part, are already used for the communication with the ADC and the RTC. Although it is possible and even common to connect multiple devices to a single SPI bus, there is an important factor to take into consideration. One device should be either master or client in this type of communication, which creates a problem in the case of the atmega in the measuring part. More specific, this microcontroller has the role of master in the communication with the ADC and RTC but should be client in the communication with the control device. Therefore using $I^2C$ instead of SPI is the most promising solution.
+There are a few different approaches to achieve communication between digital systems like the ones we have described so far including serial communication, I$^2$C etc. The protocol we chose for the communication between the two parts of the system is the I$^2$C because firstly it has more than sufficient data rate but mainly because it uses only the two available I$^2$C pins for the bus. This is really important because the SPI pins of the atmega, in the measuring part, are already used for the communication with the ADC and the RTC. Although it is possible and even common to connect multiple devices to a single SPI bus, there is an important factor to take into consideration. One device should be either master or client in this type of communication, which creates a problem in the case of the atmega in the measuring part. More specific, this microcontroller has the role of master in the communication with the ADC and RTC but should be client in the communication with the control device. Therefore using I$^2$C instead of SPI is the most promising solution.
 
 The connections between the two parts are given below:
 
@@ -619,15 +783,15 @@ The connections between the two parts are given below:
  (Client) & (Master) & \\\hline
  5V & 5V & Power supply line \\
  GND & GND & Ground line \\
- SDA(A4) & SDA(A4) & Data line of $I^2C$ bus \\
- SCL(A5) & SCL(A5) & Clock line of $I^2C$ bus \\
+ SDA(A4) & SDA(A4) & Data line of I$^2$C bus \\
+ SCL(A5) & SCL(A5) & Clock line of I$^2$C bus \\
  DATA-READY(7) & INT(3) & Interrupt line, activated when the data packet is ready \\
 \end{tabular}
 \end{center}
 
 The code on the second Arduino Uno is developed in the direction of only simulating the control device. In particular it is waiting for the data packet to be created in the measuring side and when this happens, the interrupt pin (3) get activated resulting the stop of microcontroller's hold. After this waiting time, the Arduino in the control side request the measured data from from the measuring Arduino.
 
-At this point we have only discussed the tasks of the Arduino at the control side, but how the measuring microcontroller handles the communication and data transfer? For this question we have to firstly describe, with more details, what is happening on the measuring Arduino. As we discussed in the previous section, the measuring microcontroller is able to get all measurements in the first 600ms and then wait the rest 400 ms, until the next 1Hz pulse is activated. We can use this "free time"  for the construction of the data packet and later on its  transmission to the control device. Because the transferred data in the $I^2C$ communication have a specific maximum length of 32 bytes, we need to split the measured values in 6 packets each one of them consisting of different measurements, as noted in the table -TABLE NUMBER-.
+At this point we have only discussed the tasks of the Arduino at the control side, but how the measuring microcontroller handles the communication and data transfer? For this question we have to firstly describe, with more details, what is happening on the measuring Arduino. As we discussed in the previous section, the measuring microcontroller is able to get all measurements in the first 600ms and then wait the rest 400 ms, until the next 1Hz pulse is activated. We can use this "free time"  for the construction of the data packet and later on its  transmission to the control device. Because the transferred data in the I$^2$C communication have a specific maximum length of 32 bytes, we need to split the measured values in 6 packets each one of them consisting of different measurements, as noted in the table -TABLE NUMBER-.
 
 \begin{center}
 \begin{tabular}{ c l } 
@@ -648,24 +812,212 @@ Summing up the above discussed subjects, at this point we have created a functio
 \subsubsection{Isolation board}
 The only goal not achieved yet with the current prototype setup is the isolation layer between the two parts of the system. As we have described earlier, we have concluded which ICs will be used for the isolation of both the power supply and the communication signals. So, the only missing part is the actual design of the isolation stage. For this reason we decided to create a new demo PCB, specifically designed to test the isolation setup that we have in mind.
 
-This board facilitates the ADuM5000 isolated DC-to-DC converter as well as the MAX14850 six-channel digital isolator. Moreover, there are added a few more parts necessary for the operation of the two ICs such as decoupling capacitors, along with the appropriate pin headers for the external connections during prototyping. Four pull-up resistors are also necessary for the $I^2C$ bus lines, as mentioned in the MAX14850's datasheet. The final schematic of this board is really simple and is shown in the figure -FIGURE NUMBER-. Simply described, the board takes the signals from the pin header in the "non-isolated" side and pass them through the appropriate isolation IC which in the end feeds them to the header pin in the "isolated" side.\\
+This board facilitates the ADuM5000 isolated DC-to-DC converter as well as the MAX14850 six-channel digital isolator. Moreover, there are added a few more parts necessary for the operation of the two ICs such as decoupling capacitors, along with the appropriate pin headers for the external connections during prototyping. Four pull-up resistors are also necessary for the I$^2$C bus lines, as mentioned in the MAX14850's datasheet. The final schematic of this board is really simple and is shown in the figure -FIGURE NUMBER-. Simply described, the board takes the signals from the pin header in the "non-isolated" side and pass them through the appropriate isolation IC which in the end feeds them to the header pin in the "isolated" side.\\
 
---IMAGE OF ISOLATION DEMO PCB SCHEMATIC \\
+
+\begin{figure}[htbp]
+	\centering
+		\includegraphics[width=0.9\textwidth]{Chapter_3/ISO_demo_schematic.PNG}
+		\rule{35em}{0.5pt}
+	\caption{Isolation demo board schematic}
+	\label{fig:ISO_demo_schematic}
+\end{figure}
 
 The manufacturing of the board was carried out with exactly the same techniques as the demo PCB for the electrical measurements. We used the university's PCB laboratory and finally printed the demo Isolation PCB, as shown in the figure -FIGURE NUMBER-. More information about the PCB fabrication in the laboratory is given in the Appendix.\\
 
---IMAGE OF ISOLATION DEMO PCB LAYOUT \\
+\begin{figure}[htbp]
+	\centering
+		\includegraphics[width=0.8\textwidth]{Chapter_3/ISO_demo_layout.PNG}
+		\rule{35em}{0.5pt}
+	\caption{Isolation demo board layout}
+	\label{fig:ISO_demo_layo}
+\end{figure}
 
 HERE MAYBE ADD THE MODIFICATION I DID DURING PROTOTYPING???
-SOMETHING WAS WRONG BUT I DON'T REMEMBER, I HAVE TO CHECK THE BOARD HOME!!
+SOMETHING WAS WRONG BUT I DON'T REMEMBER, I HAVE TO CHECK THE BOARD AT HOME!!
 
 
 \subsection{Final Design}
-Image of the finished board..
-Explain the position of each IC and the main traces (power, gnd etc)
-
-NOTE: BOARD MODIFICATION ON ONE OF MAX14850 PINS!!!!
+After many hours of designing and testing the prototype boards, fixing minor or sometimes major problems and issues in both hardware and software it is time to make the next step. This stage is the design of the final PCB that will be included in the final device in order to carry out all the measurements and transfer the acquired data to the control part. In the following sections we will discuss all the changes and improvements we had to make in order to pass from the prototyping area to the final design, we will present the physical layout of the final PCB and lastly describe the process of assembling and testing the new board.
 
 
-\subsection{Connectors and Miscellaneous}
-Brief description of each connector and few misc parts
+\subsubsection{Schematic}
+Starting point of this new design is the updated schematic of the measuring circuit. The PV Measurements PCB is combining all previous boards' functions and therefore it's schematic consists mostly of previous boards with a few addition and changes. In particular, we kept almost the same circuits for the electrical measurements, the analog to digital conversion, the isolation and the 2.5V voltage reference. On the other hand, completely new designs were necessary for the real time clock circuitry, the 3.3V voltage regulation, the microcontroller and of course the board's external connections.
+
+To sum up all information mentioned in previous sections, the new PCB should be able to carry out the following tasks:
+
+\begin{itemize}
+    \item Precisely measure the current and voltage of the PV module's output
+    \item Sense up to 20 temperature points
+    \item Clock the above measurements, accurately once every one second
+    \item Isolate the output of the board from the rest circuit
+    \item Transfer the logged data to the connected control device through I$^2$C
+\end{itemize}
+
+ The circuit we come up with is shown as Eagle schematic below, but because of its large size it is split in three different sections. More specific the electrical measurements and ADC circuits are shown in figure -FIGURE NUMBER-, the isolation layer, the 2.5V voltage reference and the 3.3V regulation circuits are shown in figure -FIGURE NUMBER- and lastly in the figure -FIGURE NUMBER- are presented the circuit of the microcontroller, the RTC and all board's external connections. At this point, it is important to highlight that all these four parts of the circuit belong to the same big schematic design, and one can notice the connection points between them using the reference labels, marked in gray.\\
+ 
+ \begin{figure}[htbp]
+	\centering
+		\includegraphics[width=\textwidth]{Chapter_3/PV_MeasPCB_CP_ADC.PNG}
+		\rule{35em}{0.5pt}
+	\caption{Schematic of electrical measurement and ADC circuitry}
+	\label{fig:PV_MeasPCB_CP_ADC}
+\end{figure}
+ 
+ HERE mention the changes from the first demo board, such as RESET and SYNC pins etc\\
+ 
+\begin{figure}[htbp]
+	\centering
+		\includegraphics[width=\textwidth]{Chapter_3/PV_MeasPCB_ISO_2V5_3V3.PNG}
+		\rule{35em}{0.5pt}
+	\caption{Schematic of isolation, 2.5V voltage reference and 3.3V regulation circuitry}
+	\label{fig:PV_MeasPCB_ISO_2V5_3V3}
+\end{figure}
+ 
+ HERE mention the changes from the iso demo board, and the describe briefly the design of the 3.3V regulation\\
+ 
+\begin{figure}[htbp]
+	\centering
+		\includegraphics[width=\textwidth]{Chapter_3/PV_MeasPCB_ARD_RTC_CONNEC.PNG}
+		\rule{35em}{0.5pt}
+	\caption{Schematic of microcontroller, real time clock circuitry and external connections}
+	\label{fig:PV_MeasPCB_ARD_RTC_CONNEC}
+\end{figure}
+ 
+ HERE describe the circuit of the atmega, the real time clock and all the connections
+ also mention: RX-TX pins for debugging, LED indicator, Reset button
+ 
+ Last but not least, it is important to describe the main function of each connector of the board, including the header pins, the jumpers etc. In the table -TABLE NUMBER- below we have collected all these connections points on the board with a brief description.\\
+ 
+ --TABLE OF CONNECTORS\\
+ 
+\subsubsection{Layout}
+Once the schematic is drawn with all the parts and connectors wired, we can proceed to the design of the physical layout that the PCB will have. At this stage, there are plenty of interesting points that the design philosophy matters such as the components positioning or the width of the traces and the distance between them. For this reason we will present the final PCB's layout and after that focus on individual parts of the board in order to describe in depth these crucial design details. The physical layout of the PV Measurement PCV, at version 2.7, is shown in the figure -FIGURE NUMBER- as realistic rendering.\\
+
+
+\begin{figure}[htbp]
+	\centering
+	\begin{subfigure}[b]{.45\textwidth}
+		\includegraphics[width=\textwidth]{Chapter_3/PV_MeasurementPCB_top.PNG}
+	    \caption[]{Top view}
+	    \label{fig:PV_MeasurementPCB_top}
+	\end{subfigure}
+    ~
+	\begin{subfigure}[b]{.45\textwidth}
+		\includegraphics[width=\textwidth]{Chapter_3/PV_MeasurementPCB_bottom.PNG}
+	    \caption[]{Bottom view}
+	    \label{fig:PV_MeasurementPCB_bottom}
+	\end{subfigure}
+	\rule{35em}{0.5pt}
+	\caption{PV Measurements PCB realistic rendering}
+	\label{fig:PV_MeasurementPCB_render}
+\end{figure}
+
+The first part of the board that requires special mention is the circuit in which the main current flows. It is shown in figure -FIGURE NUMBER- as represented in Eagle board environment.\\
+
+
+\begin{figure}[htbp]
+	\centering
+		\includegraphics[width=0.7\textwidth]{Chapter_3/PV_MeasPCB_ZOOM_CP.PNG}
+		\rule{35em}{0.5pt}
+	\caption{Current path as shown in Eagle board environment}
+	\label{fig:PV_MeasPCB_ZOOM_CP}
+\end{figure}
+
+By observing the board's layout, one can easily notice the very big size of the copper traces used for this circuit. Also, an interesting design point is the multiple vias that connect the top and bottom layers, which have almost identical trace shape, inside the current path. The reason behind both of these design choices is the high values of current that flow through the copper traces. Because of this high current values it is important to increase the conductive material of the path, resulting less resistance and consequently less output influence, temperature losses etc.
+
+The shape of the copper traces is not designed like so for no reason either. As you may notice, all corners of the wide copper traces are broken into radius to decrease the chance of short between the different parts of the circuit, carrying high current. For the same reason we kept these traces away from each other as well as from the main ground plane of the board.
+
+Next part of the layout that we will zoom in is the area around the ADC chip, as shown in the figure -FIGURE NUMBER-.\\
+
+--CORRECTIONS HEREEEEEE!!! IMAGE OF ADC IN EAGLE with arrows to the vsense lines of the voltage reference\\
+\begin{figure}[htbp]
+	\centering
+		\includegraphics[width=0.7\textwidth]{Chapter_3/PV_MeasPCB_ZOOM_ADC.PNG}
+		\rule{35em}{0.5pt}
+	\caption{ADC circuitry layout as shown in Eagle board environment}
+	\label{fig:PV_MeasPCB_ZOOM_ADC}
+\end{figure}
+
+First thing that changed from the demo board is the fact that we do not use a break-out board for the new board. This is because in the case of the PV Measurement PCB, we will get the boards fabricated by a manufacturer company which means that we will achieve better board quality, use of soldermasks etc. All these factors make components soldering much easier, even in cases of small SMD packages and therefore break-out boards are not necessary.
+
+One more design detail that needs to be highlighted is the circuit of the 2.5V voltage reference. As shown in the layout, the IC we use to generate the voltage reference, provides two extra pins to sense the voltage output and check if it is inside the desired range. But it is known that current flowing through a PCB trace produces an IR voltage drop, and with longer traces, this drop can reach several millivolts or more, introducing a considerable error into the output voltage of the reference. To solve this problem we use an extra feature of the IC, also know 4-wire Kelvin connection, which is based on a set of high impedance voltage-sensing lines to the output and ground nodes. Because very little current flows through these connections, the IR drop across their traces is negligible, and the output and ground voltages can be sensed accurately. So, in the layout of the figure above one can notice that these two sensing lines, marked with arrows, are connected very close to the reference pins of the ADC and not in the beginning of the voltage reference traces.
+
+The isolation stage has also a few design points worth mentioning. The layout of the two isolation chips is shown in the figure -FIGURE NUMBER- as represented in Eagle board environment.\\
+
+--IMAGE OF ISOLATION IN EAGLE\\
+\begin{figure}[htbp]
+	\centering
+		\includegraphics[width=0.5\textwidth, angle=90]{Chapter_3/PV_MeasPCB_ZOOM_ISO.PNG}
+		\rule{35em}{0.5pt}
+	\caption{Isolation layout as shown in Eagle board environment}
+	\label{fig:PV_MeasPCB_ZOOM_ISO}
+\end{figure}
+
+The different ground plane of the "isolated area" is the first thing noticed here, with a very simple explanation. The whole isolation circuit will be totally useless if we shorted the two parts' grounds together because the isolation of two systems require the separation of both power traces, the positive voltage line but the ground too.
+
+For safety reasons we also kept the two sides of the isolation layer as far away as possible, leaving a significant gap in the line crossing the two isolation ICs. Lastly, it is interesting to mention the enlarged pads for the ground pins of the isolated DC-DC converter chip. The ADuM5000 is a power device that dissipates approximately 1 W of power when fully loaded. Because it is not possible to apply a heat sink to an isolation device, the device primarily depends on heat dissipation into the PCB through the ground pins, hence the enlarged design.
+
+One more thing to mention concerning the design of the board is the width of the copper traces. Except from the traces that the main current of the PV module flows, there are only two values used. All normal signal traces are 0.4064mm wide and all power lines, for both 5V and 3.3V, are 0.6096mm wide. In the figure -FIGURE NUMBER- are highlighted all power lines inside the board's layout.\\
+
+
+\begin{figure}[htbp]
+	\centering
+	\begin{subfigure}[b]{.45\textwidth}
+		\includegraphics[width=\textwidth]{Chapter_3/PV_MeasPCB_5V.PNG}
+	    \caption[]{5V power line}
+	    \label{fig:PV_MeasPCB_5V}
+	\end{subfigure}
+    ~
+	\begin{subfigure}[b]{.45\textwidth}
+		\includegraphics[width=\textwidth]{Chapter_3/PV_MeasPCB_3V3.PNG}
+	    \caption[]{3.3V power line}
+	    \label{fig:PV_MeasPCB_3V3}
+	\end{subfigure}
+	\rule{35em}{0.5pt}
+	\caption{PV Measurement PCB power lines}
+	\label{fig:PV_MeasPCB_powerLines}
+\end{figure}
+
+Last factor that is crucial to underline is a modification we had to make to the fabricated boards. The PV Measurement PCB was initially designed to work with a control device such as the Arduino Uno board we used during prototyping, which operates on 5V logic. But, as we will describe in more depth later on the report, we decided to use a control device with 3.3V logic, so a minor modification was needed to the PCB. More on that subject will be discussed in the next section.
+
+\subsubsection{Assembly and Testing}
+After the design of the physical layout for the measurement board, it is time for the fabrication of the PCBs, the assembly and soldering of the components and last but not least the boards' testing. As we have already discussed, we decide to get the PCBs fabricated by a manufacturer company and therefore there are not a lot of things to describe concerning this process. So, let start from the moment that the PCBs came already fabricated, as shown in the figure -FIGURE NUMBER-.\\
+
+
+\begin{figure}[htbp]
+	\centering
+		\includegraphics[width=0.7\textwidth]{Chapter_3/PCB_stack.jpg}
+		\rule{35em}{0.5pt}
+	\caption{Stack of fabricated PCBs}
+	\label{fig:PCB_stack}
+\end{figure}
+
+At this point the board is just a single circuit, without any components, and as a result not capable of any functionality. In order to create a working device we need to assemble the PCB, which actually means the soldering of all parts and hardware to the board. There are a few different techniques of soldering electronic components onto a PCB, sometimes depending on the type of the parts (through hole or surface mounted) or the production volume, but the most popular solutions for a small batch of boards are based on the use of:
+
+\begin{itemize}
+    \item Soldering iron
+    \item Hot air gun
+    \item Reflow oven
+\end{itemize}
+
+In our case, we used the combination of the first two methods and the final result of the assembled PV Measurement PCB is shown in the figure -FIGURE NUMBER-. More information about the soldering process of the PCBs is given in the Appendix chapter.\\
+
+
+\begin{figure}[htbp]
+	\centering
+		\includegraphics[width=.95\textwidth]{Chapter_3/PV_MeasurementPCB_assembled.jpg}
+		\rule{35em}{0.5pt}
+	\caption{Assembled PV Measurement PCB}
+	\label{fig:PV_MeasurementPCB_assembled}
+\end{figure}
+
+The last step of the whole PCB design and fabrication process is the crucial stage of testing. 
+
+Usually we start with the very basics and gradually included more sophisticated routines to the testing procedure. In particular, when a PCB was fully assembled, we carry out the following three checks in this particular order: 
+
+%\begin{enumerate}
+%    \item Visual check, making sure that all solder points are looking clean without solder bridges and shorts
+%    \item Simple blink LED script programing to the microcontroller, to ensure that the microco 
+%    \item 
+%\end{enumerate}
